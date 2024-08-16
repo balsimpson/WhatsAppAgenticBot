@@ -36,10 +36,10 @@ export async function processWebhookBody(body: any) {
 		case "text":
 			let reply = await getAssistantResponse(msg_body, user);
 			console.log("reply", from, phone_number_id, reply);
-			// return await sendWhatsAppMessage(from, phone_number_id, {
-			// 	type: "text",
-			// 	content: reply,
-			// });
+			return await sendWhatsAppMessage(from, phone_number_id, {
+				type: "text",
+				content: reply,
+			});
 			return reply;
 		case "document":
 		// return await handleDocumentMessage(body, from, phone_number_id);
