@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@nuxtjs/tailwindcss": "^6.12.1",
+    "@vercel/kv": "^1.0.1",
     "nuxt": "^3.12.4",
     "openai": "^4.55.9",
     "vue": "latest"
