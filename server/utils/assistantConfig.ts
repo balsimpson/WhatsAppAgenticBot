@@ -13,15 +13,16 @@ const assistants = {
  * @returns object {id: string, instructions: string}
  */
 export async function getAssistant(user: string) {
-	const lowerCaseUser = user.toLowerCase();
+	// const lowerCaseUser = user.toLowerCase();
 
-	// check useStorage
-	const storage = useStorage("data");
-	const assistant = await storage.getItem("assistant");
+	// // check useStorage
+	// const storage = useStorage("data");
+	// const assistant = await storage.getItem("assistant");
 
-	if (assistant) {
-		return assistant;
-	} else {
-		return assistants["ebert"];
-	}
+	// if (assistant) {
+	// 	return assistant;
+	// } else {
+	// 	return assistants["ebert"];
+	// }
+	return { id: "asst_eqHom6A4XQSRqLAIdV6gQhse" };
 }
