@@ -31,7 +31,7 @@ export async function getAssistantResponse(prompt: any, user: string) {
 	});
 
 	const assistant = await getAssistant(user);
-	console.log("assistant", assistant);
+	console.log("assistant_id", assistant.id);
 
 	let run = await openai.beta.threads.runs.createAndPoll(thread.id, {
 		assistant_id: assistant.id,
