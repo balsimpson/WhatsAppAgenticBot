@@ -47,23 +47,25 @@ async function createNewThread(storage: any, user: string) {
 async function handlePendingRuns(threadId: string) {
 	const runs = await openai.beta.threads.runs.list(threadId);
 
-	// console.log("runs", runs);
-
-	// if (runs.data[0]?.status != "completed") {
-	// 	await openai.beta.threads.runs.cancel(threadId, runs.data[0].id);
-	// }
 	if (runs && runs?.data.length > 0) {
 
-		runs.data.forEach(async (run: any) => {
+		for (const run of runs.data) {
 			if (run.status != "completed") {
 				let run_id = run.id;
 				let res = await openai.beta.threads.runs.cancel(threadId, run_id);
 				console.log("cancel run", res);
 			}
-		});
+		}
+		// runs.data.forEach(async (run: any) => {
+		// 	if (run.status != "completed") {
+		// 		let run_id = run.id;
+		// 		let res = await openai.beta.threads.runs.cancel(threadId, run_id);
+		// 		console.log("cancel run", res);
+		// 	}
+		// });
 	}
 
-	return;
+	return true;
 }
 
 // @ts-ignore
