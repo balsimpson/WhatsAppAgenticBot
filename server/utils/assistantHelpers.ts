@@ -28,7 +28,6 @@ export async function getAssistantResponse(prompt: any, user: string) {
 	const assistant = await getAssistant(user);
 	console.log("assistant", assistant);
 
-	
 	let run = await openai.beta.threads.runs.create(thread.id, {
 		// @ts-ignore
 		assistant_id: assistant.id,
@@ -49,12 +48,11 @@ async function handlePendingRuns(threadId: string) {
 	const runs = await openai.beta.threads.runs.list(threadId);
 
 	// console.log("runs", runs);
-	
+
 	// if (runs.data[0]?.status != "completed") {
 	// 	await openai.beta.threads.runs.cancel(threadId, runs.data[0].id);
 	// }
 	if (runs && runs?.data.length > 0) {
-
 		// loop through the runs to find the one with status is not completed
 		// if found, cancel the run
 		// if not found, return
@@ -65,10 +63,10 @@ async function handlePendingRuns(threadId: string) {
 				let res = await openai.beta.threads.runs.cancel(threadId, run_id);
 				console.log("cancel run", res);
 			}
-		})
+		});
 	}
 
-	return
+	return;
 }
 
 // @ts-ignore
@@ -83,7 +81,12 @@ async function handleRunStatus(
 
 	if (run.status === "completed") {
 		const messages = await openai.beta.threads.messages.list(thread.id);
-		return messages.data;
+		for (const message of messages.data) {
+			if (message.role == "assistant") {
+				//@ts-ignore
+				return message.content[0].text.value;
+			}
+		}
 	} else if (run.status === "requires_action") {
 		return await handleRequiresAction(run, thread);
 	} else {
