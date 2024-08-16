@@ -18,6 +18,10 @@ export async function getAssistantResponse(prompt: any, user: string) {
 		  await openai.beta.threads.retrieve(threadId)
 		: await createNewThread(storage, user);
 
+
+	console.log("thread", thread);
+	
+
 	// Check and handle pending runs
 	await handlePendingRuns(thread.id);
 
@@ -61,13 +65,6 @@ async function handlePendingRuns(threadId: string) {
 				console.log("cancel run", res);
 			}
 		}
-		// runs.data.forEach(async (run: any) => {
-		// 	if (run.status != "completed") {
-		// 		let run_id = run.id;
-		// 		let res = await openai.beta.threads.runs.cancel(threadId, run_id);
-		// 		console.log("cancel run", res);
-		// 	}
-		// });
 	}
 
 	return true;
@@ -78,10 +75,10 @@ async function handleRunStatus(
 	run: OpenAI.Beta.Threads.Runs.Run,
 	thread: OpenAI.Beta.Thread
 ) {
-	while (run.status === "in_progress" || run.status === "queued") {
-		await new Promise((resolve) => setTimeout(resolve, 1000)); // Wait for 1 second
-		run = await openai.beta.threads.runs.retrieve(thread.id, run.id);
-	}
+	// while (run.status === "in_progress" || run.status === "queued") {
+	// 	await new Promise((resolve) => setTimeout(resolve, 1000)); // Wait for 1 second
+	// 	run = await openai.beta.threads.runs.retrieve(thread.id, run.id);
+	// }
 
 	if (run.status === "completed") {
 		const messages = await openai.beta.threads.messages.list(run.thread_id);
