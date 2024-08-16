@@ -25,9 +25,9 @@ export async function processWebhookBody(body: any) {
 		msg_body: string;
 	};
 	
-	console.log("msg_body", JSON.stringify(msg_body));
+	// console.log("msg_body", JSON.stringify(msg_body));
 	const messageType = body.entry[0].changes[0].value.messages[0].type;
-	console.log("messageType", messageType);
+	// console.log("messageType", messageType);
 	
 
 	switch (messageType) {

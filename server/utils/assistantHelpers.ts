@@ -10,7 +10,7 @@ const openai = new OpenAI({
 });
 
 export async function getAssistantResponse(prompt: any, user: string) {
-	console.log("prompt", prompt);
+	console.log(`${user}: `, prompt);
 	const storage = useStorage("data");
 	let threadId = (await storage.getItem(user)) || "";
 	let thread = threadId
@@ -34,12 +34,16 @@ export async function getAssistantResponse(prompt: any, user: string) {
 		//instructions: `${assistant.instructions} Address user as ${user}.`,
 	});
 
+	console.log("run", run);
+
 	// run = await openai.beta.threads.runs.retrieve(thread.id, run.id);
 
 	return await handleRunStatus(run, thread);
 }
 
 async function createNewThread(storage: any, user: string) {
+	console.log("creating new thread");
+	
 	const newThread = await openai.beta.threads.create();
 	await storage.setItem(user, newThread.id);
 	return newThread;
