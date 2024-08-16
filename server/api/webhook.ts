@@ -17,7 +17,7 @@ export default defineEventHandler(async (event: any) => {
 		const res = await processWebhookBody(body);
 
 		console.log("response: ", res);
-		return await processWebhookBody(body);
+		return res;
 	} catch (error) {
 		console.error(error);
 		return { error: "An error occurred processing the request" };

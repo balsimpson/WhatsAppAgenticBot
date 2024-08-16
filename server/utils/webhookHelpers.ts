@@ -12,13 +12,13 @@ export function handleSubscription(query: any): string | undefined {
 }
 
 export async function processWebhookBody(body: any) {
-	console.log("body", JSON.stringify(body));
-
+	
 	if (body.entry[0].changes[0].value.statuses) {
 		console.log("status: ", body.entry[0].changes[0].value.statuses[0].status);
 		return { statusCode: 200, body: "ok" };
 	}
-
+	console.log("body", JSON.stringify(body));
+	
 	const { user, phone_number_id, from, msg_body } = getMsg(body) as {
 		user: string;
 		phone_number_id: string;
