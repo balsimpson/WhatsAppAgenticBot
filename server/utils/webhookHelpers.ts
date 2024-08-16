@@ -40,6 +40,7 @@ export async function processWebhookBody(body: any) {
 			// 	type: "text",
 			// 	content: reply,
 			// });
+			return reply;
 		case "document":
 		// return await handleDocumentMessage(body, from, phone_number_id);
 		case "interactive":
