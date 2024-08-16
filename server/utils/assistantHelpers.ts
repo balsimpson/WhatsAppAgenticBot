@@ -25,7 +25,7 @@ export async function getAssistantResponse(prompt: any, user: string) {
 		content: prompt,
 	});
 
-	const assistant = getAssistant(user);
+	const assistant = await getAssistant(user);
 	console.log("assistant", assistant);
 	
 	let run = await openai.beta.threads.runs.create(thread.id, {
