@@ -79,14 +79,16 @@ async function handleRunStatus(
 	}
 
 	if (run.status === "completed") {
-		const messages = await openai.beta.threads.messages.list(thread.id);
+		const messages = await openai.beta.threads.messages.list(run.thread_id);
 
 		console.log("messages", messages);
 
 		for (const message of messages.data) {
+			console.log("message", message);
+
 			if (message.role == "assistant") {
 				//@ts-ignore
-				console.log("message", message.content[0].text.value);
+				console.log("messageTxt", message.content[0].text.value);
 				
 				//@ts-ignore
 				return convertToWhatsAppMarkdown(message.content[0].text.value);
