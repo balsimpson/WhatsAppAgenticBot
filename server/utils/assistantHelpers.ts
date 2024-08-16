@@ -27,6 +27,7 @@ export async function getAssistantResponse(prompt: any, user: string) {
 
 	const assistant = await getAssistant(user);
 	console.log("assistant", assistant);
+
 	
 	let run = await openai.beta.threads.runs.create(thread.id, {
 		// @ts-ignore
@@ -47,18 +48,27 @@ async function createNewThread(storage: any, user: string) {
 async function handlePendingRuns(threadId: string) {
 	const runs = await openai.beta.threads.runs.list(threadId);
 
-	console.log("runs", runs);
+	// console.log("runs", runs);
 	
 	// if (runs.data[0]?.status != "completed") {
 	// 	await openai.beta.threads.runs.cancel(threadId, runs.data[0].id);
 	// }
 	if (runs && runs?.data.length > 0) {
-		if (runs?.data[0]?.status != "completed") {
-			let run_id = runs.data[0].id;
-			let res = await openai.beta.threads.runs.cancel(threadId, run_id);
-			console.log("cancel run", res);
-		}
+
+		// loop through the runs to find the one with status is not completed
+		// if found, cancel the run
+		// if not found, return
+
+		runs.data.forEach(async (run: any) => {
+			if (run.status != "completed") {
+				let run_id = run.id;
+				let res = await openai.beta.threads.runs.cancel(threadId, run_id);
+				console.log("cancel run", res);
+			}
+		})
 	}
+
+	return
 }
 
 // @ts-ignore
