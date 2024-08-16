@@ -84,10 +84,11 @@ async function handleRunStatus(
 	if (run.status === "completed") {
 		const messages = await openai.beta.threads.messages.list(run.thread_id);
 
-		console.log("messages", messages);
+		console.log("messages", messages.data);
 
 		for (const message of messages.data) {
-			console.log("message", message);
+			//@ts-ignore
+			console.log("message", message.content[0].text.value);
 
 			if (message.role == "assistant") {
 				//@ts-ignore
