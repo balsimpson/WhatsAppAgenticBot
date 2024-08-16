@@ -4,7 +4,6 @@ import { handleToolCalls } from "./toolHandlers";
 
 const OPENAI_KEY = process.env.OPENAI_KEY;
 
-
 // Initialize OpenAI client
 const openai = new OpenAI({
 	apiKey: OPENAI_KEY,
@@ -45,8 +44,15 @@ async function createNewThread(storage: any, user: string) {
 
 async function handlePendingRuns(threadId: string) {
 	const runs = await openai.beta.threads.runs.list(threadId);
-	if (runs.data[0]?.status !== "completed") {
-		await openai.beta.threads.runs.cancel(threadId, runs.data[0].id);
+	// if (runs.data[0]?.status != "completed") {
+	// 	await openai.beta.threads.runs.cancel(threadId, runs.data[0].id);
+	// }
+	if (runs && runs?.data.length > 0) {
+		if (runs?.data[0]?.status != "completed") {
+			let run_id = runs.data[0].id;
+			let res = await openai.beta.threads.runs.cancel(threadId, run_id);
+			console.log("cancel run", res);
+		}
 	}
 }
 
@@ -62,7 +68,7 @@ async function handleRunStatus(
 
 	if (run.status === "completed") {
 		const messages = await openai.beta.threads.messages.list(thread.id);
-		return messages.data
+		return messages.data;
 	} else if (run.status === "requires_action") {
 		return await handleRequiresAction(run, thread);
 	} else {
