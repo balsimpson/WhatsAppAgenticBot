@@ -47,6 +47,7 @@ export async function sendWhatsAppMessage(
 ) {
 	const { type, content, mediaId, buttonText } = options;
 
+	console.log("Sending WhatsApp message:", options);
 	let body: any;
 
 	switch (type) {
@@ -111,6 +112,7 @@ export async function sendWhatsAppMessage(
 			body: JSON.stringify(body),
 		});
 
+		console.log("WhatsApp message sent successfully:", response);
 		return response;
 	} catch (error) {
 		console.error("Error sending WhatsApp message:", error);
