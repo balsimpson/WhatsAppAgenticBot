@@ -10,6 +10,7 @@ const openai = new OpenAI({
 });
 
 export async function getAssistantResponse(prompt: any, user: string) {
+	console.log("prompt", prompt);
 	const storage = useStorage("data");
 	let threadId = (await storage.getItem(user)) || "";
 	let thread = threadId

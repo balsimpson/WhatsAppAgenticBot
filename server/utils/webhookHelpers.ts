@@ -17,7 +17,6 @@ export async function processWebhookBody(body: any) {
 		console.log("status: ", body.entry[0].changes[0].value.statuses[0].status);
 		return { statusCode: 200, body: "ok" };
 	}
-	console.log("body", JSON.stringify(body));
 	
 	const { user, phone_number_id, from, msg_body } = getMsg(body) as {
 		user: string;
@@ -25,7 +24,8 @@ export async function processWebhookBody(body: any) {
 		from: string;
 		msg_body: string;
 	};
-
+	
+	console.log("msg_body", JSON.stringify(msg_body));
 	const messageType = body.entry[0].changes[0].value.messages[0].type;
 	console.log("messageType", messageType);
 	
