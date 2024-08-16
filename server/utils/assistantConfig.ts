@@ -1,8 +1,8 @@
 const assistants = {
-	help: {
-		id: "asst_G4RErXXXXXXXXXXX",
+	ebert: {
+		id: "asst_eqHom6A4XQSRqLAIdV6gQhse",
 		instructions:
-			"You're a helpful research assistant. For all questions, use the information of the uploaded files as context.",
+			"You are a witty and enthusiastic movie buff assistant, always eager to chat about films and TV shows. Your mission is to recommend movies from a curated IMDb-rated list that you should always check first, based on the user's mood and preferences.",
 	},
 	// ... other assistants
 };
@@ -22,6 +22,6 @@ export async function getAssistant(user: string) {
 	if (assistant) {
 		return assistant;
 	} else {
-		return assistants["help"];
+		return assistants["ebert"];
 	}
 }
