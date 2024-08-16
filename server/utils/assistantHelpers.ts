@@ -46,6 +46,9 @@ async function createNewThread(storage: any, user: string) {
 
 async function handlePendingRuns(threadId: string) {
 	const runs = await openai.beta.threads.runs.list(threadId);
+
+	console.log("runs", runs);
+	
 	// if (runs.data[0]?.status != "completed") {
 	// 	await openai.beta.threads.runs.cancel(threadId, runs.data[0].id);
 	// }
