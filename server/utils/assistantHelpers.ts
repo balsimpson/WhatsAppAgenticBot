@@ -53,9 +53,6 @@ async function handlePendingRuns(threadId: string) {
 	// 	await openai.beta.threads.runs.cancel(threadId, runs.data[0].id);
 	// }
 	if (runs && runs?.data.length > 0) {
-		// loop through the runs to find the one with status is not completed
-		// if found, cancel the run
-		// if not found, return
 
 		runs.data.forEach(async (run: any) => {
 			if (run.status != "completed") {
@@ -74,15 +71,18 @@ async function handleRunStatus(
 	run: OpenAI.Beta.Threads.Runs.Run,
 	thread: OpenAI.Beta.Thread
 ) {
-	while (run.status === "in_progress" || run.status === "queued") {
-		await new Promise((resolve) => setTimeout(resolve, 1000)); // Wait for 1 second
-		run = await openai.beta.threads.runs.retrieve(thread.id, run.id);
-	}
+	// while (run.status === "in_progress" || run.status === "queued") {
+	// 	await new Promise((resolve) => setTimeout(resolve, 1000)); // Wait for 1 second
+	// 	run = await openai.beta.threads.runs.retrieve(thread.id, run.id);
+	// }
 
 	if (run.status === "completed") {
 		const messages = await openai.beta.threads.messages.list(thread.id);
 		for (const message of messages.data) {
 			if (message.role == "assistant") {
+				//@ts-ignore
+				console.log("message", message.content[0].text.value);
+				
 				//@ts-ignore
 				return message.content[0].text.value;
 			}
