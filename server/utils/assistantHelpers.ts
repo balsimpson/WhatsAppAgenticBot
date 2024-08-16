@@ -28,12 +28,12 @@ export async function getAssistantResponse(prompt: any, user: string) {
 	const assistant = await getAssistant(user);
 	console.log("assistant", assistant);
 
-	let run = await openai.beta.threads.runs.create(thread.id, {
-		// @ts-ignore
+	let run = await openai.beta.threads.runs.createAndPoll(thread.id, {
 		assistant_id: assistant.id,
+		//instructions: `${assistant.instructions} Address user as ${user}.`,
 	});
 
-	run = await openai.beta.threads.runs.retrieve(thread.id, run.id);
+	// run = await openai.beta.threads.runs.retrieve(thread.id, run.id);
 
 	return await handleRunStatus(run, thread);
 }
@@ -84,7 +84,7 @@ async function handleRunStatus(
 				console.log("message", message.content[0].text.value);
 				
 				//@ts-ignore
-				return message.content[0].text.value;
+				return convertToWhatsAppMarkdown(message.content[0].text.value);
 			}
 		}
 	} else if (run.status === "requires_action") {
