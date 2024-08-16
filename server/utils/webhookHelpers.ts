@@ -12,7 +12,7 @@ export function handleSubscription(query: any): string | undefined {
 }
 
 export async function processWebhookBody(body: any) {
-	console.log("body", JSON.stringify(body));
+	// console.log("body", JSON.stringify(body));
 
 	if (body.entry[0].changes[0].value.statuses) {
 		console.log("status: ", body.entry[0].changes[0].value.statuses[0].status);
