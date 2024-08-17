@@ -76,10 +76,10 @@ async function handleRunStatus(
 	run: OpenAI.Beta.Threads.Runs.Run,
 	thread: OpenAI.Beta.Thread
 ) {
-	// while (run.status === "in_progress" || run.status === "queued") {
-	// 	await new Promise((resolve) => setTimeout(resolve, 1000)); // Wait for 1 second
-	// 	run = await openai.beta.threads.runs.retrieve(thread.id, run.id);
-	// }
+	while (run.status === "in_progress" || run.status === "queued") {
+		await new Promise((resolve) => setTimeout(resolve, 1000)); // Wait for 1 second
+		run = await openai.beta.threads.runs.retrieve(thread.id, run.id);
+	}
 
 	if (run.status === "completed") {
 		const messages = await openai.beta.threads.messages.list(run.thread_id);
@@ -88,7 +88,7 @@ async function handleRunStatus(
 
 		for (const message of messages.data) {
 			//@ts-ignore
-			console.log("message", message.content[0].text.value);
+			// console.log("message", message.content[0].text.value);
 
 			if (message.role == "assistant") {
 				//@ts-ignore
@@ -99,6 +99,7 @@ async function handleRunStatus(
 			}
 		}
 	} else if (run.status === "requires_action") {
+		console.log("Run requires action:", run);
 		return await handleRequiresAction(run, thread);
 	} else {
 		console.error("Run did not complete:", run);

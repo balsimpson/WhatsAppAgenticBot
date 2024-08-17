@@ -18,6 +18,7 @@ export async function handleToolCalls(toolCalls: any[]) {
 
 const toolHandlers: { [key: string]: Function } = {
 	get_movie_tvshow_details: async (tool: any, functionArguments: any) => {
+    console.log("get_movie_tvshow_details called with arguments:", functionArguments);
 		return {
 			tool_call_id: tool.id,
 			output: "title: The Shawshank Redemption, year: 1994, rating: 9.3",
