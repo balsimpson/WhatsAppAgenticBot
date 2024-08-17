@@ -1,6 +1,7 @@
 import { sendWhatsAppMessage } from "./whatsappServerUtils";
 import { getAssistantResponse } from "./assistantHelpers";
 
+
 export function isSubscriptionRequest(query: any): boolean {
 	return query["hub.mode"] === "subscribe";
 }
