@@ -12,8 +12,8 @@ const openai = new OpenAI({
 export async function getAssistantResponse(prompt: any, user: string) {
 	console.log(`${user}: `, prompt);
 	const storage = useStorage("data");
-	let threadId = "";
-	// let threadId = (await storage.getItem(user)) || "";
+	// let threadId = "";
+	let threadId = (await storage.getItem(user)) || "";
 	let thread = threadId
 		? //   @ts-ignore
 		  await openai.beta.threads.retrieve(threadId)

@@ -52,17 +52,26 @@
 			<!-- add a divider -->
 			<div class="w-full h-[1px] bg-gray-200 my-2"></div>
 
+			<!-- Vector store data -->
+
+			<div v-if="vectorStoreData">
+				<VectorStoreDisplay :data="vectorStoreData" />
+			</div>
+
 			<!-- Instructions -->
 			<div class="mt-4">
 				<div class="text-sm font-semibold">Instructions</div>
-				<div class="mt-2 text-sm">
+				<div
+					class="mt-2 text-sm whitespace-pre-wrap max-h-[300px] overflow-scroll"
+				>
 					{{ assistant.instructions }}
 				</div>
 			</div>
 
 			<!-- add a divider -->
-			<div class="w-full h-[1px] bg-gray-200 my-2"></div>
-			<div class="w-full mt-4">
+			<!-- functions -->
+			<div v-if="functions.length > 0" class="w-full mt-4">
+				<div class="w-full h-[1px] bg-gray-200 my-2"></div>
 				<div class="mb-2 text-sm font-semibold">Functions</div>
 				<div class="flex flex-wrap gap-2 mb-4">
 					<div
@@ -70,28 +79,40 @@
 						:key="func"
 						@click="selectFunction(func)"
 						class="px-2 py-1 border rounded cursor-pointer hover:bg-gray-100"
-						:class="{ 'bg-blue-100': selectedFunction === func }"
+						:class="[
+							(selectedFunction?.name ?? '') === (func?.name ?? '')
+								? 'bg-blue-100'
+								: '',
+						]"
 					>
 						{{ func.name }}
 					</div>
 				</div>
 				<div v-if="selectedFunction" class="mt-4">
-					<div class="mb-2 text-sm font-semibold">Function Code:</div>
 					<pre
 						class="p-4 break-words whitespace-pre-wrap bg-gray-100 rounded"
 						>{{ getFunctionCode(selectedFunction) }}</pre
 					>
 				</div>
+
+				<!-- <div>{{ assistant.tool_resources }}</div> -->
 			</div>
 		</div>
 
-        <pre>{{ assistant }}</pre>
+		<!-- <pre>{{ assistant }}</pre> -->
 	</div>
 </template>
 
 <script setup>
 	import { useRoute } from "vue-router";
+	// import { formatDate } from "~/composables/useUtils";
+	import { useDateFormatter } from "~/composables/useUtils";
 
+	definePageMeta({
+		layout: "default",
+	});
+	
+	const { formatDate } = useDateFormatter();
 	const route = useRoute();
 	const id = route.params.id;
 
@@ -109,16 +130,6 @@
 			.length;
 	});
 
-	// get all function names if there are any
-	const functionNames = computed(() => {
-		if (!assistant.value.tools) return [];
-		return assistant.value.tools
-
-			.filter((tool) => tool.type === "function")
-			.map((tool) => tool.function.name);
-		// .join(", ");
-	});
-
 	// create an array with all the functions with name and code
 	const functions = computed(() => {
 		if (!assistant.value.tools) return [];
@@ -132,8 +143,64 @@
 			});
 	});
 
+	// // get vector store id if available
+	// const vectorStoreId = computed(() => {
+	// 	if (!assistant.value.tool_resources) return null;
+
+	// 	return (
+	// 		assistant.value.tool_resources?.file_search?.vector_store_ids[0] || ""
+	// 	);
+	// });
+
+	// // get the vector store if there is a vectorStoreId
+	// const vectorStore = computed(async () => {
+	// 	if (!vectorStoreId.value) return null;
+	// 	let res = await useAsyncData("store", () =>
+	// 		$fetch(`/api/stores/get?id=${vectorStoreId.value}`)
+	// 	);
+	// 	console.log(res.data.value);
+	// 	return res.data.value;
+	// });
+
+	const vectorStoreId = computed(() => {
+		if (!assistant.value.tool_resources) return null;
+		return (
+			assistant.value.tool_resources?.file_search?.vector_store_ids[0] || ""
+		);
+	});
+
+	const vectorStoreData = ref(null);
+	const vectorStoreLoading = ref(false);
+	const vectorStoreError = ref(null);
+
+	const fetchVectorStore = async () => {
+		if (!vectorStoreId.value) return;
+
+		vectorStoreLoading.value = true;
+		vectorStoreError.value = null;
+
+		try {
+			const { data } = await useFetch(
+				`/api/stores/get?id=${vectorStoreId.value}`
+			);
+			vectorStoreData.value = data.value;
+		} catch (error) {
+			console.error("Error fetching vector store:", error);
+			vectorStoreError.value = error.message;
+		} finally {
+			vectorStoreLoading.value = false;
+		}
+	};
+
+	// Watch for changes in vectorStoreId and fetch data when it changes
+	watch(vectorStoreId, fetchVectorStore, { immediate: true });
+
 	function selectFunction(func) {
-		selectedFunction.value = func;
+		if (selectedFunction.value?.name == func.name) {
+			selectedFunction.value = null;
+		} else {
+			selectedFunction.value = func;
+		}
 	}
 
 	function getFunctionCode(func) {
@@ -154,17 +221,5 @@
 			.split("_")
 			.map((word) => word.charAt(0).toUpperCase() + word.slice(1))
 			.join(" ");
-	};
-
-	const formatDate = (date) => {
-		const options = {
-			year: "numeric",
-			month: "short",
-			day: "numeric",
-			hour: "2-digit",
-			minute: "2-digit",
-			hour12: true,
-		};
-		return new Date(date * 1000).toLocaleString("en-gb", options);
 	};
 </script>

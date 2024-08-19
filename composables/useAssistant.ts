@@ -1,7 +1,7 @@
 import OpenAI from "openai";
 
 export const initializeOpenAI = () => {
-    const config = useRuntimeConfig()
+	const config = useRuntimeConfig();
 	const openai = new OpenAI({
 		apiKey: config.public.OPENAI_KEY,
 	});
@@ -18,7 +18,7 @@ export const getAssistantsList = async () => {
 	} catch (error) {
 		console.error("Error fetching assistants:", error);
 		return [];
-    }
+	}
 };
 
 // get the assistant with an id
@@ -26,7 +26,7 @@ export const getAssistant = async (id: string) => {
 	const openai = initializeOpenAI();
 	const assistant = await openai.beta.assistants.retrieve(id);
 	return assistant;
-}
+};
 
 // get list of files in storage
 export const getStorageList = async () => {
@@ -40,4 +40,16 @@ export const getVectorStores = async () => {
 	const openai = initializeOpenAI();
 	const stores = await openai.beta.vectorStores.list();
 	return stores.data || [];
+};
+
+// get vector store specified by id
+export const getVectorStore = async (id: string) => {
+	try {
+		const openai = initializeOpenAI();
+		const store = await openai.beta.vectorStores.retrieve(id);
+		return store;
+	} catch (error) {
+		console.error("Error fetching vector store:", error);
+		return null;
+	}
 };

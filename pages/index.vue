@@ -1,7 +1,7 @@
 <template>
 	<div class="flex flex-col items-center w-full max-w-4xl p-3 mx-auto">
 		<!-- assistants -->
-		<div class="flex justify-between w-full max-w-2xl mt-12 mb-3">
+		<div class="flex justify-between w-full max-w-2xl mt-6 mb-3">
 			<div class="flex items-center">
 				<svg
 					xmlns="http://www.w3.org/2000/svg"
@@ -44,7 +44,7 @@
 				<span class="pl-2 pr-1 text-sm">New Assistant</span>
 			</button> -->
 		</div>
-		<div class="w-full max-w-2xl space-y-4">
+		<div class="w-full max-w-2xl space-y-2">
 			<AssistantCard
 				v-for="assistant in assistants"
 				:key="assistant"
@@ -95,12 +95,10 @@
 				<span class="pl-2 pr-1 text-sm">Upload</span>
 			</button> -->
 		</div>
-		<div class="w-full max-w-2xl space-y-4">
-			<AssistantCard />
-			<AssistantCard />
-			<AssistantCard />
-			<AssistantCard />
-			<AssistantCard />
+		<div class="w-full max-w-2xl space-y-2">
+
+			<StorageCard v-for="file in files" :file="file"/>
+			
 		</div>
 		<!-- <NuxtRouteAnnouncer /> -->
 		<!-- <NuxtWelcome /> -->
@@ -110,7 +108,10 @@
 <script setup>
 	const {
 		data: assistants,
-		pending,
 		error,
 	} = await useAsyncData("assistants", () => $fetch("/api/assistants/list"));
+	
+	const {
+		data: files,
+	} = await useAsyncData("files", () => $fetch("/api/files/list"));
 </script>

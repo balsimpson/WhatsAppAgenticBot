@@ -1,5 +1,5 @@
 <template>
-	<div class="w-full max-w-2xl p-4 border rounded-lg">
+	<div class="w-full max-w-2xl p-4 bg-white border rounded-lg">
 		<div class="flex justify-between">
 			<NuxtLink :to="`/assistants/${id}`" class="text-lg font-bold">{{
 				title
@@ -50,8 +50,9 @@
 </template>
 
 <script setup lang="ts">
-	import { computed } from "vue";
-
+	// import { formatDate } from "~/composables/useUtils";
+	import { useDateFormatter } from '~/composables/useUtils';
+	
 	const props = defineProps({
 		id: String,
 		title: String,
@@ -60,7 +61,7 @@
 		model: String,
 		tools: Array,
 	});
-
+	const { formatDate } = useDateFormatter();
 	const toolsUsed = computed(() => {
 		if (!props.tools) return [];
 		return props.tools
@@ -88,15 +89,15 @@
 			.join(" ");
 	};
 
-	const formatDate = (date: number) => {
-		const options: Intl.DateTimeFormatOptions = {
-			year: "numeric",
-			month: "short",
-			day: "numeric",
-			hour: "2-digit",
-			minute: "2-digit",
-			hour12: true,
-		};
-		return new Date(date * 1000).toLocaleString("en-gb", options);
-	};
+	// const formatDate = (date: number) => {
+	// 	const options: Intl.DateTimeFormatOptions = {
+	// 		year: "numeric",
+	// 		month: "short",
+	// 		day: "numeric",
+	// 		hour: "2-digit",
+	// 		minute: "2-digit",
+	// 		hour12: true,
+	// 	};
+	// 	return new Date(date * 1000).toLocaleString("en-gb", options);
+	// };
 </script>
