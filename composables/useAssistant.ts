@@ -35,6 +35,13 @@ export const getStorageList = async () => {
 	return files.data || [];
 };
 
+// get file with id
+export const getFile = async (id: string) => {
+	const openai = initializeOpenAI();
+	const file = await openai.files.retrieve(id);
+	return file;
+}
+
 // get list of vector stores
 export const getVectorStores = async () => {
 	const openai = initializeOpenAI();
