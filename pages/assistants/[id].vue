@@ -1,7 +1,6 @@
 <template>
-	<div class="w-full max-w-2xl p-3 mx-auto mt-12">
-		<div v-if="pending">Loading...</div>
-		<div v-else-if="error">Error: {{ error }}</div>
+	<div class="w-full max-w-2xl p-3 mx-auto mt-6">
+		<div v-if="error">Error: {{ error }}</div>
 		<div v-else-if="assistant">
 			<div class="flex justify-between">
 				<div v-if="assistant.name" class="text-lg font-bold">
@@ -120,7 +119,6 @@
 
 	const {
 		data: assistant,
-		pending,
 		error,
 	} = await useAsyncData("assistant", () => $fetch(`/api/assistants/${id}`));
 
@@ -142,25 +140,6 @@
 				};
 			});
 	});
-
-	// // get vector store id if available
-	// const vectorStoreId = computed(() => {
-	// 	if (!assistant.value.tool_resources) return null;
-
-	// 	return (
-	// 		assistant.value.tool_resources?.file_search?.vector_store_ids[0] || ""
-	// 	);
-	// });
-
-	// // get the vector store if there is a vectorStoreId
-	// const vectorStore = computed(async () => {
-	// 	if (!vectorStoreId.value) return null;
-	// 	let res = await useAsyncData("store", () =>
-	// 		$fetch(`/api/stores/get?id=${vectorStoreId.value}`)
-	// 	);
-	// 	console.log(res.data.value);
-	// 	return res.data.value;
-	// });
 
 	const vectorStoreId = computed(() => {
 		if (!assistant.value.tool_resources) return null;

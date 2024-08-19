@@ -1,7 +1,7 @@
 <template>
 	<div class="w-full max-w-2xl p-4 bg-white border rounded-lg">
 		<div class="flex justify-between">
-			<NuxtLink :to="`/assistants/${id}`" class="text-lg font-bold">{{
+			<NuxtLink :to="`/assistants/${id}`" class="text-lg font-bold text-teal-600 hover:underline">{{
 				title
 			}}</NuxtLink>
 			<!-- <div class="text-lg font-bold">{{ title }}</div> -->
