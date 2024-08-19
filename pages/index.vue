@@ -45,11 +45,15 @@
 			</button> -->
 		</div>
 		<div class="w-full max-w-2xl space-y-4">
-			<AssistantCard />
-			<AssistantCard />
-			<AssistantCard />
-			<AssistantCard />
-			<AssistantCard />
+			<AssistantCard
+				v-for="assistant in assistants"
+				:key="assistant"
+				:id="assistant.id"
+				:title="assistant.name"
+				:date="assistant.created_at"
+				:model="assistant.model"
+				:tools="assistant.tools"
+			/>
 		</div>
 
 		<!-- files -->
@@ -102,3 +106,11 @@
 		<!-- <NuxtWelcome /> -->
 	</div>
 </template>
+
+<script setup>
+	const {
+		data: assistants,
+		pending,
+		error,
+	} = await useAsyncData("assistants", () => $fetch("/api/assistants/list"));
+</script>

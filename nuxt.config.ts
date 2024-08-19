@@ -9,4 +9,9 @@ export default defineNuxtConfig({
 	},
   devtools: { enabled: true },
   modules: ["@nuxtjs/tailwindcss"],
+  runtimeConfig: {
+	public: {
+		OPENAI_KEY: process.env.OPENAI_KEY,
+	},
+  },
 })

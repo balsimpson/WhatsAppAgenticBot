@@ -99,7 +99,7 @@ async function handleRunStatus(
 			}
 		}
 	} else if (run.status === "requires_action") {
-		console.log("Run requires action:", run);
+		console.log("Run requires action:", run.required_action?.submit_tool_outputs.tool_calls[0].function.name);
 		return await handleRequiresAction(run, thread);
 	} else {
 		console.error("Run did not complete:", run);

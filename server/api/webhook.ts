@@ -14,6 +14,8 @@ export default defineEventHandler(async (event: any) => {
 
 		// If no query params or not a subscription request, process the message
 		const body = await readBody(event);
+		console.log("body: ", body);
+		
 		const res = await processWebhookBody(body);
 
 		console.log("response: ", res);
