@@ -14,10 +14,37 @@ export async function getAssistantResponse(prompt: any, user: string) {
 	const storage = useStorage("data");
 	// let threadId = "";
 	let threadId = (await storage.getItem(user)) || "";
-	let thread = threadId
-		? //   @ts-ignore
-		  await openai.beta.threads.retrieve(threadId)
-		: await createNewThread(storage, user);
+	let thread: any;
+
+	if (threadId) {
+		// @ts-ignore
+		thread = await openai.beta.threads.retrieve(threadId);
+		const lastUpdateTimestamp = new Date(thread.created_at);
+
+		//@ts-ignore
+
+		if (Date.now() - lastUpdateTimestamp.getTime() * 1000 > 15 * 60 * 1000) {
+			// If it was, create a new thread
+			const newThread = await openai.beta.threads.create();
+			threadId = newThread.id;
+			thread = newThread;
+			// Update the threadId in the KV store
+			await storage.setItem(user, thread.id);
+			//console.log("save", res);
+		}
+	} else {
+		// console.log("no thread", user);
+		const newThread = await openai.beta.threads.create();
+		threadId = newThread.id;
+		thread = newThread;
+		// Save the new threadId in the KV store
+		await storage.setItem(user, thread.id);
+	}
+
+	// let thread = threadId
+	// 	? //   @ts-ignore
+	// 	  await openai.beta.threads.retrieve(threadId)
+	// 	: await createNewThread(storage, user);
 
 
 	console.log("thread", thread);
