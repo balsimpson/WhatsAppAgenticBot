@@ -3,6 +3,7 @@ import {
 	handleSubscription,
 	processWebhookBody,
 } from "~/server/utils/webhookHelpers";
+import { addLogEntry } from "~/server/utils/assistantHelpers";
 
 export default defineEventHandler(async (event: any) => {
 	try {
@@ -14,14 +15,18 @@ export default defineEventHandler(async (event: any) => {
 
 		// If no query params or not a subscription request, process the message
 		const body = await readBody(event);
-		console.log("body: ", body);
-		
+		// console.log("body: ", body);
+
 		const res = await processWebhookBody(body);
 
-		console.log("response: ", res);
+		// console.log("response: ", res);
 		return res;
 	} catch (error) {
 		console.error(error);
+		await addLogEntry({
+			type: "error",
+			content: JSON.stringify(error),
+		});
 		return { error: "An error occurred processing the request" };
 	}
 });

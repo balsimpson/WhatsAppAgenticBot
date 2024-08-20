@@ -67,13 +67,13 @@ export async function getAssistantResponse(prompt: any, user: string) {
 }
 
 // Helper function to add a log entry
-async function addLogEntry(entry: any) {
+export async function addLogEntry(entry: any) {
 	const storage = useStorage("data");
 	const logs = (await storage.getItem("logs")) || [];
 
 	const now = new Date();
 	entry.timestamp = now.toISOString();
-	
+
 	// @ts-ignore
 	if (logs.length >= 15) {
 		// @ts-ignore
@@ -113,7 +113,7 @@ async function handleRunStatus(
 	if (run.status === "completed") {
 		const messages = await openai.beta.threads.messages.list(run.thread_id);
 
-		console.log("messages", messages.data);
+		// console.log("messages", messages.data);
 
 		for (const message of messages.data) {
 			//@ts-ignore
@@ -137,7 +137,7 @@ async function handleRunStatus(
 		//@ts-ignore
 		await addLogEntry({
 			type: "requires_action",
-			content: "Calling function " + functionName,
+			content: "Calling function: " + functionName,
 		});
 		console.log(
 			"Run requires action:",
