@@ -9,15 +9,14 @@
 				v-for="(log, index) in logs"
 				:key="index"
 				:class="log.user ? 'bg-black text-green-400' : 'bg-black text-blue-400'"
-				class="flex flex-col p-2 rounded-lg"
+				class="flex p-1 rounded-lg"
 			>
 				<div
 					:class="log.user ? 'text-green-600' : 'text-blue-600'"
-					class="w-28"
 				>
 					{{ log.user ? `${log.user}:` : "Assistant:" }}
 				</div>
-				<div class="w-full truncate">
+				<div class="w-full pl-3 ">
 					{{ log.content }}
 				</div>
 			</div>

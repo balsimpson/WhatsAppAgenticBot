@@ -14,7 +14,7 @@ export async function getAssistantResponse(prompt: any, user: string) {
 	const storage = useStorage("data");
 
 	// Log user prompt
-    await addLogEntry({ type: "user_prompt", user, content: prompt });
+	await addLogEntry({ type: "user", user, content: prompt });
 
 	let threadId: string = (await storage.getItem(user)) || "";
 	let thread = await getThread(threadId);
@@ -66,21 +66,19 @@ export async function getAssistantResponse(prompt: any, user: string) {
 	}
 }
 
-
 // Helper function to add a log entry
 async function addLogEntry(entry: any) {
 	const storage = useStorage("data");
-    const logs = (await storage.getItem("logs")) || [];
+	const logs = (await storage.getItem("logs")) || [];
 	// @ts-ignore
-    if (logs.length >= 15) {
+	if (logs.length >= 15) {
 		// @ts-ignore
-        logs.shift();
-    }
+		logs.shift();
+	}
 	// @ts-ignore
-    logs.push(entry);
-    await storage.setItem("logs", logs);
+	logs.push(entry);
+	await storage.setItem("logs", logs);
 }
-
 
 async function handlePendingRuns(threadId: string) {
 	const runs = await openai.beta.threads.runs.list(threadId);
@@ -119,21 +117,36 @@ async function handleRunStatus(
 
 			if (message.role == "assistant") {
 				//@ts-ignore
-				await addLogEntry({ type: "assistant", content: message.content[0]?.text?.value });
+				await addLogEntry({
+					type: "assistant",
+					//@ts-ignore
+					content: message.content[0]?.text?.value,
+				});
 				//@ts-ignore
 				return convertToWhatsAppMarkdown(message.content[0].text.value);
 			}
 		}
 	} else if (run.status === "requires_action") {
+		let functionName =
+			run.required_action?.submit_tool_outputs.tool_calls[0].function.name;
+
 		//@ts-ignore
-		await addLogEntry({ type: "assistant", content: "requires_action" + JSON.stringify(run.required_action?.submit_tool_outputs.tool_calls[0]) });
+		await addLogEntry({
+			type: "requires_action",
+			content: "Calling function " + functionName,
+		});
 		console.log(
 			"Run requires action:",
 			run.required_action?.submit_tool_outputs.tool_calls[0].function
 		);
 		return await handleRequiresAction(run, thread);
 	} else {
-		console.error("Run did not complete:", run);
+		await addLogEntry({
+			type: "error",
+			user: "",
+			content: "Run did not complete:" + JSON.stringify(run),
+		});
+
 		return "Oops! I got no reply.";
 	}
 }
