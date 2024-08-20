@@ -126,7 +126,7 @@ async function handleRunStatus(
 		}
 	} else if (run.status === "requires_action") {
 		//@ts-ignore
-		await addLogEntry({ type: "assistant", content: "requires_action" });
+		await addLogEntry({ type: "assistant", content: "requires_action" + JSON.stringify(run.required_action?.submit_tool_outputs.tool_calls[0]) });
 		console.log(
 			"Run requires action:",
 			run.required_action?.submit_tool_outputs.tool_calls[0].function
