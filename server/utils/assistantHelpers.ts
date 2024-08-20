@@ -37,10 +37,10 @@ export async function getAssistantResponse(prompt: any, user: string) {
 			user,
 			prompt,
 		});
-		await storage.setItem("logs", []);
+		await storage.setItem("logs", logs);
 	}
 
-	console.log("logs", logs);
+	console.log("getAssistantResponse-logs", logs);
 	
 	let threadId: string = (await storage.getItem(user)) || "";
 
