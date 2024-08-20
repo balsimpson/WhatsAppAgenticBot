@@ -90,6 +90,7 @@ export async function getAssistantResponse(prompt: any, user: string) {
 				// Update the thread_id in the KV store
 				await storage.setItem(user, thread_data.id);
 				//console.log("save", res);
+				return thread_data;
 			}
 		} else {
 			// console.log("no thread", user);
@@ -98,6 +99,7 @@ export async function getAssistantResponse(prompt: any, user: string) {
 			thread_data = newThread;
 			// Save the new thread_id in the KV store
 			await storage.setItem(user, thread.id);
+			return thread_data;
 		}
 	}
 }
