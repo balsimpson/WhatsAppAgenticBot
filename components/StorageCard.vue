@@ -33,20 +33,20 @@
 		},
 	});
 
-	// const { formatDate } = useDateFormatter();
+	const { formatDate } = useDateFormatter();
 
-	const formatDate = (timestamp) => {
-		const date = new Date(timestamp * 1000);
-		const options = {
-			year: "numeric",
-			month: "short",
-			day: "2-digit",
-			hour: "2-digit",
-			minute: "2-digit",
-			// second: "2-digit",
-			hour12: true,
-		};
-		//   @ts-ignore
-		return new Intl.DateTimeFormat("en-GB", options).format(date);
-	};
+	// const formatDate = (timestamp) => {
+	// 	const date = new Date(timestamp * 1000);
+	// 	const options = {
+	// 		year: "numeric",
+	// 		month: "short",
+	// 		day: "2-digit",
+	// 		hour: "2-digit",
+	// 		minute: "2-digit",
+	// 		// second: "2-digit",
+	// 		hour12: true,
+	// 	};
+	// 	//   @ts-ignore
+	// 	return new Intl.DateTimeFormat("en-GB", options).format(date);
+	// };
 </script>
