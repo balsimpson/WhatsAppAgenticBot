@@ -13,6 +13,27 @@ export async function getAssistantResponse(prompt: any, user: string) {
 	console.log(`${user}: `, prompt);
 	const storage = useStorage("data");
 	// let threadId = "";
+
+	// get logs and update. if there are more than 15 logs, delete the oldest
+	const logs = (await storage.getItem("logs")) || [];
+	// @ts-ignore
+	if (logs && logs?.length > 0) {
+		// @ts-ignore
+		logs.push({
+			user,
+			prompt,
+		});
+
+		await storage.setItem("logs", logs);
+	} else {
+		// @ts-ignore
+		logs.push({
+			user,
+			prompt,
+		});
+		await storage.setItem("logs", []);
+	}
+
 	let threadId: string = (await storage.getItem(user)) || "";
 	let thread: any;
 
@@ -154,14 +175,14 @@ async function handleRequiresAction(
 }
 
 function convertToWhatsAppMarkdown(text: string) {
-    // Convert monospace text (must come first)
-    text = text.replace(/```(.*?)```/gs, "```$1```");
+	// Convert monospace text (must come first)
+	text = text.replace(/```(.*?)```/gs, "```$1```");
 
-    // Convert bold text
-    text = text.replace(/\*\*(.*?)\*\*/g, "*$1*");
+	// Convert bold text
+	text = text.replace(/\*\*(.*?)\*\*/g, "*$1*");
 
-    // Convert italic text
-    text = text.replace(/(?<!\*)\*(?!\*)(.*?)\*(?<!\*)/g, "_$1_");
+	// Convert italic text
+	text = text.replace(/(?<!\*)\*(?!\*)(.*?)\*(?<!\*)/g, "_$1_");
 
-    return text;
+	return text;
 }
