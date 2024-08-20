@@ -1,9 +1,48 @@
 <template>
 	<div class="flex flex-col items-center w-full max-w-4xl p-3 mx-auto">
-
 		<!-- logs -->
-		<pre class="whitespace-pre-wrap">{{ logs }}</pre>
-		
+
+		<div
+			class="w-full max-w-2xl p-4 mx-auto space-y-1 overflow-y-auto font-mono text-green-500 bg-black rounded-lg shadow-md max-h-96"
+		>
+			<div
+				v-for="(log, index) in logs"
+				:key="index"
+				:class="log.user ? 'bg-black text-green-400' : 'bg-black text-blue-400'"
+				class="flex flex-col p-2 rounded-lg"
+			>
+				<div
+					:class="log.user ? 'text-green-600' : 'text-blue-600'"
+					class="w-28"
+				>
+					{{ log.user ? `${log.user}:` : "Assistant:" }}
+				</div>
+				<div class="w-full truncate">
+					{{ log.content }}
+				</div>
+			</div>
+		</div>
+
+		<!-- <pre class="whitespace-pre-wrap">{{ logs }}</pre> -->
+		<!-- <div v-if="logs.length > 0" class="w-full max-w-2xl">
+			<div v-for="log in logs" :key="log">
+				<div
+					class="flex items-start justify-between w-full p-2 mt-2 text-sm text-gray-700 bg-gray-100 border border-gray-200 rounded-lg"
+				>
+					<div
+						:class="log.user ? 'text-green-600' : 'text-blue-600'"
+						class="w-28"
+					>
+						{{ log.user ? `${log.user}:` : "Assistant:" }}
+					</div>
+
+					<div class="w-full pl-2 truncate">
+						{{ log.content }}
+					</div>
+				</div>
+			</div>
+		</div> -->
+
 		<!-- assistants -->
 		<div v-if="assistants.length > 0" class="w-full max-w-2xl">
 			<div class="flex justify-between mt-6 mb-3">
@@ -106,7 +145,10 @@
 
 		<!-- files -->
 		<div v-if="files.length > 0" class="w-full max-w-2xl">
-			<div v-if="files.length > 0" class="flex justify-between w-full max-w-2xl mt-12 mb-3">
+			<div
+				v-if="files.length > 0"
+				class="flex justify-between w-full max-w-2xl mt-12 mb-3"
+			>
 				<div class="flex items-center">
 					<svg
 						width="1em"
@@ -124,7 +166,7 @@
 					</svg>
 					<span class="pl-2 font-semibold"
 						>Storage
-	
+
 						<span
 							class="px-2 py-1 text-sm text-white bg-gray-500 border rounded"
 							>{{ files.length }}</span
@@ -155,7 +197,6 @@
 				<StorageCard v-for="file in files" :file="file" />
 			</div>
 		</div>
-		
 	</div>
 </template>
 
@@ -168,10 +209,24 @@
 		$fetch("/api/files/list")
 	);
 
-	const { data: logs } = await useAsyncData("logs", () =>
-		$fetch("/api/logs")
-	);
+	const { data: logs } = await useAsyncData("logs", () => $fetch("/api/logs"));
 
-	// const storage = useStorage("data");
-	// const logs = (await storage.getItem("logs")) || [];
+	// const logs = [
+	// 	{ user: "gb", content: "hello" },
+	// 	{ user: "gb", content: "hi" },
+	// 	{
+	// 		content:
+	// 			"Well, hello there, movie maestro! 🎬 What’s rolling in your world today? Are you feeling like a romantic comedy, a gripping thriller, or perhaps something in a foreign language that makes you feel fancy? Let’s dive into the magic of cinema together! 🌟",
+	// 	},
+	// 	{ user: "gb", content: "show me some good korean movies from balu’s list" },
+	// 	{
+	// 		content:
+	// 			"Get ready to add some thrilling Korean cinema to your watchlist...",
+	// 	},
+	// 	{ user: "gb", content: "i’ve seen them all" },
+	// 	{
+	// 		content:
+	// 			"You're a tough one to please, but let's keep unearthing those cinematic treasures!",
+	// 	},
+	// ];
 </script>
