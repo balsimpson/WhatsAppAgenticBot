@@ -154,12 +154,14 @@ async function handleRequiresAction(
 }
 
 function convertToWhatsAppMarkdown(text: string) {
-	// Convert bold text
-	text = text.replace(/\*\*(.*?)\*\*/g, "*$1*");
-	// Convert italic text
-	text = text.replace(/\*(.*?)\*/g, "_$1_");
-	// Convert monospace text
-	text = text.replace(/```(.*?)```/gs, "```$1```");
+    // Convert monospace text (must come first)
+    text = text.replace(/```(.*?)```/gs, "```$1```");
 
-	return text;
+    // Convert bold text
+    text = text.replace(/\*\*(.*?)\*\*/g, "*$1*");
+
+    // Convert italic text
+    text = text.replace(/(?<!\*)\*(?!\*)(.*?)\*(?<!\*)/g, "_$1_");
+
+    return text;
 }
