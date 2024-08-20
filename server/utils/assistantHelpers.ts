@@ -18,13 +18,12 @@ export async function getAssistantResponse(prompt: any, user: string) {
 	const logs = (await storage.getItem("logs")) || [];
 	// @ts-ignore
 	if (logs && logs?.length > 0) {
-		
 		// @ts-ignore
 		if (logs.length > 15) {
 			// @ts-ignore
 			logs.shift();
 		}
-		
+
 		// @ts-ignore
 		logs.push({
 			user,
@@ -42,9 +41,9 @@ export async function getAssistantResponse(prompt: any, user: string) {
 	}
 
 	let threadId: string = (await storage.getItem(user)) || "";
-	let threadData: any;
 
-	let thread = await getThread(threadId, threadData);
+	let thread = await getThread(threadId);
+	console.log("thread", thread);
 
 	// let thread = threadId
 	// 	? //   @ts-ignore
@@ -54,7 +53,7 @@ export async function getAssistantResponse(prompt: any, user: string) {
 	// console.log("thread", thread);
 
 	// Check and handle pending runs
-	await handlePendingRuns(thread.id);
+	await handlePendingRuns(thread?.id);
 
 	const message = await openai.beta.threads.messages.create(thread.id, {
 		role: "user",
@@ -75,7 +74,8 @@ export async function getAssistantResponse(prompt: any, user: string) {
 
 	return await handleRunStatus(run, thread);
 
-	async function getThread(thread_id: string, thread_data: any) {
+	async function getThread(thread_id: string) {
+		let thread_data: any;
 		if (thread_id) {
 			// @ts-ignore
 			thread_data = await openai.beta.threads.retrieve(thread_id);
@@ -90,7 +90,6 @@ export async function getAssistantResponse(prompt: any, user: string) {
 				// Update the thread_id in the KV store
 				await storage.setItem(user, thread_data.id);
 				//console.log("save", res);
-				return thread_data;
 			}
 		} else {
 			// console.log("no thread", user);
@@ -99,8 +98,8 @@ export async function getAssistantResponse(prompt: any, user: string) {
 			thread_data = newThread;
 			// Save the new thread_id in the KV store
 			await storage.setItem(user, thread.id);
-			return thread_data;
 		}
+		return thread_data;
 	}
 }
 
