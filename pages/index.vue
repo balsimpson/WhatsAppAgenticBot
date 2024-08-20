@@ -2,7 +2,7 @@
 	<div class="flex flex-col items-center w-full max-w-4xl p-3 mx-auto">
 
 		<!-- logs -->
-		<!-- <pre class="whitespace-pre-wrap">{{ logs }}</pre> -->
+		<pre class="whitespace-pre-wrap">{{ logs }}</pre>
 		
 		<!-- assistants -->
 		<div v-if="assistants.length > 0" class="w-full max-w-2xl">
@@ -166,6 +166,10 @@
 
 	const { data: files } = await useAsyncData("files", () =>
 		$fetch("/api/files/list")
+	);
+
+	const { data: logs } = await useAsyncData("logs", () =>
+		$fetch("/api/logs")
 	);
 
 	// const storage = useStorage("data");
