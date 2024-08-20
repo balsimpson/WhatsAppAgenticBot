@@ -2,7 +2,16 @@
 	<div class="flex flex-col items-center w-full max-w-4xl p-3 mx-auto">
 		<!-- logs -->
 
-		<LogsDisplay v-if="logs.length > 0" :logs="logs" />
+		<Suspense>
+			<template #default>
+				<LogsDisplay v-if="logs.length > 0" :logs="logs" />
+			</template>
+			<template #fallback>
+				<div>Loading...</div>
+			</template>
+		</Suspense>
+
+		
 
 		<!-- assistants -->
 		<div v-if="assistants.length > 0" class="w-full max-w-2xl">
@@ -56,7 +65,7 @@
 			</button> -->
 			</div>
 			<div class="w-full max-w-2xl space-y-2 overflow-scroll h-96">
-				<AssistantCard
+				<LazyAssistantCard
 					v-for="assistant in assistants"
 					:key="assistant"
 					:id="assistant.id"
@@ -155,7 +164,7 @@
 				</button> -->
 			</div>
 			<div class="w-full max-w-2xl space-y-2 overflow-scroll h-96">
-				<StorageCard v-for="file in files" :file="file" />
+				<LazyStorageCard v-for="file in files" :file="file" />
 			</div>
 		</div>
 	</div>
@@ -171,7 +180,4 @@
 	);
 
 	const { data: logs } = await useAsyncData("logs", () => $fetch("/api/logs"));
-
-	
 </script>
-

@@ -18,41 +18,47 @@
 		</div>
 
 		<div
-			class="w-full max-w-2xl p-4 mx-auto space-y-1 overflow-y-auto font-mono text-sm text-green-500 bg-black rounded-lg shadow-md max-h-72"
+			class="w-full max-w-2xl p-4 mx-auto space-y-2 overflow-y-auto font-mono text-sm text-green-500 bg-black rounded-lg shadow-md max-h-72"
 		>
-			<div
-				v-for="(log, index) in logs"
-				:key="index"
-				:class="log.user ? 'bg-black text-green-400' : 'bg-black text-blue-400'"
-				class="flex flex-col p-1 rounded-lg sm:flex-row"
-			>
-				<!-- <pre>{{ logs }}</pre> -->
-				<div
-					:class="[
-						log.user
-							? 'text-green-600'
-							: log.type === 'requires_action'
-							? 'text-yellow-600'
-							: 'text-blue-600',
-					]"
-				>
-					{{
-						log.user
-							? `${log.user}:`
-							: log.type === "requires_action"
-							? "Action:"
-							: "Assistant:"
-					}}
+			<div v-for="(log, index) in logs" :key="index">
+				<div v-if="log.timestamp" class="text-xs font-light text-gray-500">
+					{{ getRelativeTime(log.timestamp) }}
 				</div>
+
 				<div
-					@click.prevent="toggleTruncate(index)"
-					class="w-full overflow-hidden cursor-pointer sm:pl-3"
-					:class="[
-						isTruncatedList[index] ? 'truncate' : '',
-						log.type === 'requires_action' ? 'text-yellow-500' : '',
-					]"
+					:class="
+						log.user ? 'bg-black text-green-400' : 'bg-black text-blue-400'
+					"
+					class="flex flex-col sm:flex-row"
 				>
-					{{ log.content }}
+					<div
+						:class="[
+							log.user
+								? 'text-green-600'
+								: log.type === 'requires_action'
+								? 'text-yellow-600'
+								: 'text-blue-600',
+						]"
+					>
+						{{
+							log.user
+								? `${log.user}:`
+								: log.type === "requires_action"
+								? "Action:"
+								: "Assistant:"
+						}}
+					</div>
+
+					<div
+						@click.prevent="toggleTruncate(index)"
+						class="max-w-full overflow-hidden cursor-pointer sm:pl-3"
+						:class="[
+							isTruncatedList[index] ? 'truncate' : '',
+							log.type === 'requires_action' ? 'text-yellow-500' : '',
+						]"
+					>
+						{{ log.content }}
+					</div>
 				</div>
 			</div>
 		</div>
@@ -62,7 +68,6 @@
 <script setup>
 	const props = defineProps(["logs"]);
 	const isTruncatedList = ref(props.logs.map(() => true));
-
 	const toggleTruncate = (index) => {
 		isTruncatedList.value[index] = !isTruncatedList.value[index];
 	};
