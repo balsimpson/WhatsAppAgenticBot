@@ -16,7 +16,7 @@
 				>
 					{{ log.user ? `${log.user}:` : "Assistant:" }}
 				</div>
-				<div class="w-full pl-3 ">
+				<div class="w-full pl-3 truncate">
 					{{ log.content }}
 				</div>
 			</div>

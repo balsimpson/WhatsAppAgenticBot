@@ -73,10 +73,10 @@ async function addLogEntry(entry: any) {
 	// @ts-ignore
 	if (logs.length >= 15) {
 		// @ts-ignore
-		logs.shift();
+		logs.pop();
 	}
 	// @ts-ignore
-	logs.push(entry);
+	logs.unshift(entry);
 	await storage.setItem("logs", logs);
 }
 
