@@ -70,6 +70,10 @@ export async function getAssistantResponse(prompt: any, user: string) {
 async function addLogEntry(entry: any) {
 	const storage = useStorage("data");
 	const logs = (await storage.getItem("logs")) || [];
+
+	const now = new Date();
+	entry.timestamp = now.toISOString();
+	
 	// @ts-ignore
 	if (logs.length >= 15) {
 		// @ts-ignore
