@@ -13,42 +13,17 @@ export async function getAssistantResponse(prompt: any, user: string) {
 	console.log(`${user}: `, prompt);
 	const storage = useStorage("data");
 	// let threadId = "";
-	let threadId = (await storage.getItem(user)) || "";
+	let threadId: string = (await storage.getItem(user)) || "";
 	let thread: any;
 
-	if (threadId) {
-		// @ts-ignore
-		thread = await openai.beta.threads.retrieve(threadId);
-		const lastUpdateTimestamp = new Date(thread.created_at);
-
-		//@ts-ignore
-
-		if (Date.now() - lastUpdateTimestamp.getTime() * 1000 > 15 * 60 * 1000) {
-			// If it was, create a new thread
-			const newThread = await openai.beta.threads.create();
-			threadId = newThread.id;
-			thread = newThread;
-			// Update the threadId in the KV store
-			await storage.setItem(user, thread.id);
-			//console.log("save", res);
-		}
-	} else {
-		// console.log("no thread", user);
-		const newThread = await openai.beta.threads.create();
-		threadId = newThread.id;
-		thread = newThread;
-		// Save the new threadId in the KV store
-		await storage.setItem(user, thread.id);
-	}
+	await getThread(threadId, thread);
 
 	// let thread = threadId
 	// 	? //   @ts-ignore
 	// 	  await openai.beta.threads.retrieve(threadId)
 	// 	: await createNewThread(storage, user);
 
-
-	console.log("thread", thread);
-	
+	// console.log("thread", thread);
 
 	// Check and handle pending runs
 	await handlePendingRuns(thread.id);
@@ -66,16 +41,42 @@ export async function getAssistantResponse(prompt: any, user: string) {
 		//instructions: `${assistant.instructions} Address user as ${user}.`,
 	});
 
-	console.log("run", run);
+	// console.log("run", run);
 
 	// run = await openai.beta.threads.runs.retrieve(thread.id, run.id);
 
 	return await handleRunStatus(run, thread);
+
+	async function getThread(thread_id: string, thread_data: any) {
+		if (thread_id) {
+			// @ts-ignore
+			thread_data = await openai.beta.threads.retrieve(thread_id);
+			const lastUpdateTimestamp = new Date(thread_data.created_at);
+
+			//@ts-ignore
+			if (Date.now() - lastUpdateTimestamp.getTime() * 1000 > 15 * 60 * 1000) {
+				// If it was, create a new thread
+				const newThread = await openai.beta.threads.create();
+				thread_id = newThread.id;
+				thread_data = newThread;
+				// Update the thread_id in the KV store
+				await storage.setItem(user, thread_data.id);
+				//console.log("save", res);
+			}
+		} else {
+			// console.log("no thread", user);
+			const newThread = await openai.beta.threads.create();
+			thread_id = newThread.id;
+			thread_data = newThread;
+			// Save the new thread_id in the KV store
+			await storage.setItem(user, thread.id);
+		}
+	}
 }
 
 async function createNewThread(storage: any, user: string) {
 	console.log("creating new thread");
-	
+
 	const newThread = await openai.beta.threads.create();
 	await storage.setItem(user, newThread.id);
 	return newThread;
@@ -85,7 +86,6 @@ async function handlePendingRuns(threadId: string) {
 	const runs = await openai.beta.threads.runs.list(threadId);
 
 	if (runs && runs?.data.length > 0) {
-
 		for (const run of runs.data) {
 			if (run.status != "completed") {
 				let run_id = run.id;
@@ -120,13 +120,16 @@ async function handleRunStatus(
 			if (message.role == "assistant") {
 				//@ts-ignore
 				console.log("messageTxt", message.content[0].text.value);
-				
+
 				//@ts-ignore
 				return convertToWhatsAppMarkdown(message.content[0].text.value);
 			}
 		}
 	} else if (run.status === "requires_action") {
-		console.log("Run requires action:", run.required_action?.submit_tool_outputs.tool_calls[0].function.name);
+		console.log(
+			"Run requires action:",
+			run.required_action?.submit_tool_outputs.tool_calls[0].function.name
+		);
 		return await handleRequiresAction(run, thread);
 	} else {
 		console.error("Run did not complete:", run);
