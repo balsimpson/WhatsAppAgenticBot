@@ -40,10 +40,11 @@ export async function getAssistantResponse(prompt: any, user: string) {
 		await storage.setItem("logs", []);
 	}
 
+	console.log("logs", logs);
+	
 	let threadId: string = (await storage.getItem(user)) || "";
 
 	let thread = await getThread(threadId);
-	console.log("thread", thread);
 
 	// let thread = threadId
 	// 	? //   @ts-ignore
@@ -67,10 +68,6 @@ export async function getAssistantResponse(prompt: any, user: string) {
 		assistant_id: assistant.id,
 		//instructions: `${assistant.instructions} Address user as ${user}.`,
 	});
-
-	// console.log("run", run);
-
-	// run = await openai.beta.threads.runs.retrieve(thread.id, run.id);
 
 	return await handleRunStatus(run, thread);
 
@@ -101,14 +98,6 @@ export async function getAssistantResponse(prompt: any, user: string) {
 		}
 		return thread_data;
 	}
-}
-
-async function createNewThread(storage: any, user: string) {
-	console.log("creating new thread");
-
-	const newThread = await openai.beta.threads.create();
-	await storage.setItem(user, newThread.id);
-	return newThread;
 }
 
 async function handlePendingRuns(threadId: string) {
@@ -147,9 +136,6 @@ async function handleRunStatus(
 			// console.log("message", message.content[0].text.value);
 
 			if (message.role == "assistant") {
-				//@ts-ignore
-				console.log("messageTxt", message.content[0].text.value);
-
 				//@ts-ignore
 				return convertToWhatsAppMarkdown(message.content[0].text.value);
 			}
