@@ -18,6 +18,13 @@ export async function getAssistantResponse(prompt: any, user: string) {
 	const logs = (await storage.getItem("logs")) || [];
 	// @ts-ignore
 	if (logs && logs?.length > 0) {
+		
+		// @ts-ignore
+		if (logs.length > 15) {
+			// @ts-ignore
+			logs.shift();
+		}
+		
 		// @ts-ignore
 		logs.push({
 			user,

@@ -1,5 +1,9 @@
 <template>
 	<div class="flex flex-col items-center w-full max-w-4xl p-3 mx-auto">
+
+		<!-- logs -->
+		<pre class="whitespace-pre-wrap">{{ logs }}</pre>
+		
 		<!-- assistants -->
 		<div v-if="assistants.length > 0" class="w-full max-w-2xl">
 			<div class="flex justify-between mt-6 mb-3">
@@ -101,7 +105,7 @@
 		</div>
 
 		<!-- files -->
-		<div v-if="assistants.length > 0" class="w-full max-w-2xl">
+		<div v-if="files.length > 0" class="w-full max-w-2xl">
 			<div v-if="files.length > 0" class="flex justify-between w-full max-w-2xl mt-12 mb-3">
 				<div class="flex items-center">
 					<svg
@@ -163,4 +167,7 @@
 	const { data: files } = await useAsyncData("files", () =>
 		$fetch("/api/files/list")
 	);
+
+	const storage = useStorage("data");
+	const logs = (await storage.getItem("logs")) || [];
 </script>
