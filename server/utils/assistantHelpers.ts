@@ -12,46 +12,12 @@ const openai = new OpenAI({
 export async function getAssistantResponse(prompt: any, user: string) {
 	console.log(`${user}: `, prompt);
 	const storage = useStorage("data");
-	// let threadId = "";
 
-	// get logs and update. if there are more than 15 logs, delete the oldest
-	const logs = (await storage.getItem("logs")) || [];
-	// @ts-ignore
-	if (logs && logs?.length > 0) {
-		// @ts-ignore
-		if (logs.length > 15) {
-			// @ts-ignore
-			logs.shift();
-		}
+	// Log user prompt
+    await addLogEntry({ type: "user_prompt", user, content: prompt });
 
-		// @ts-ignore
-		logs.push({
-			user,
-			prompt,
-		});
-
-		await storage.setItem("logs", logs);
-	} else {
-		// @ts-ignore
-		logs.push({
-			user,
-			prompt,
-		});
-		await storage.setItem("logs", logs);
-	}
-
-	console.log("getAssistantResponse-logs", logs);
-	
 	let threadId: string = (await storage.getItem(user)) || "";
-
 	let thread = await getThread(threadId);
-
-	// let thread = threadId
-	// 	? //   @ts-ignore
-	// 	  await openai.beta.threads.retrieve(threadId)
-	// 	: await createNewThread(storage, user);
-
-	// console.log("thread", thread);
 
 	// Check and handle pending runs
 	await handlePendingRuns(thread?.id);
@@ -100,6 +66,22 @@ export async function getAssistantResponse(prompt: any, user: string) {
 	}
 }
 
+
+// Helper function to add a log entry
+async function addLogEntry(entry: any) {
+	const storage = useStorage("data");
+    const logs = (await storage.getItem("logs")) || [];
+	// @ts-ignore
+    if (logs.length >= 15) {
+		// @ts-ignore
+        logs.shift();
+    }
+	// @ts-ignore
+    logs.push(entry);
+    await storage.setItem("logs", logs);
+}
+
+
 async function handlePendingRuns(threadId: string) {
 	const runs = await openai.beta.threads.runs.list(threadId);
 
@@ -137,13 +119,17 @@ async function handleRunStatus(
 
 			if (message.role == "assistant") {
 				//@ts-ignore
+				await addLogEntry({ type: "assistant", content: message.content[0]?.text?.value });
+				//@ts-ignore
 				return convertToWhatsAppMarkdown(message.content[0].text.value);
 			}
 		}
 	} else if (run.status === "requires_action") {
+		//@ts-ignore
+		await addLogEntry({ type: "assistant", content: "requires_action" });
 		console.log(
 			"Run requires action:",
-			run.required_action?.submit_tool_outputs.tool_calls[0].function.name
+			run.required_action?.submit_tool_outputs.tool_calls[0].function
 		);
 		return await handleRequiresAction(run, thread);
 	} else {
