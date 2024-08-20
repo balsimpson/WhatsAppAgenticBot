@@ -42,9 +42,9 @@ export async function getAssistantResponse(prompt: any, user: string) {
 	}
 
 	let threadId: string = (await storage.getItem(user)) || "";
-	let thread: any;
+	let threadData: any;
 
-	await getThread(threadId, thread);
+	let thread = await getThread(threadId, threadData);
 
 	// let thread = threadId
 	// 	? //   @ts-ignore
