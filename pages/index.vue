@@ -1,6 +1,6 @@
 <template>
 	<div class="flex flex-col items-center w-full max-w-4xl p-3 mx-auto">
-		<!-- <div>{{ message }}</div> -->
+		<div>{{ messages }}</div>
 		<!-- logs -->
 		<div v-if="logstatus == 'pending'">Loading...</div>
 		<LogsDisplay v-if="logs.length > 0" :logs="logs" />
@@ -181,12 +181,14 @@
 	// 	console.log(event.data);
 	// };
 
+	const messages = ref([]);
 	onMounted(() => {
 		if (typeof window !== "undefined") {
 			const eventSource = new EventSource("/sse");
 
 			eventSource.onmessage = (event) => {
 				console.log(event.data);
+				messages.value.push(event.data);
 			};
 		}
 	});
