@@ -53,6 +53,8 @@ export default defineEventHandler(async (event) => {
 	});
 	const eventStream = createEventStream(event);
 
+  console.log("eventStream", eventStream);
+  
 	// const interval = setInterval(async () => {
 	//   await eventStream.push(`Message @ ${new Date().toLocaleTimeString()}`);
 	// }, 10000);

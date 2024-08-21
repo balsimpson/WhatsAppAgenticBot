@@ -5,7 +5,15 @@ export default defineNuxtConfig({
 		preset: "vercel-edge",
 		storage: {
 			data: { driver: "vercelKV" },
+		},
+		routeRules: {
+			"/api/sse": {
+				headers: {
+					"cache-control": "no-cache",
+				}
+			}
 		}
+
 	},
 	devtools: { enabled: true },
 	modules: ["@nuxtjs/tailwindcss"],
