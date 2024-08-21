@@ -1,6 +1,6 @@
 <template>
 	<div class="flex flex-col items-center w-full max-w-4xl p-3 mx-auto">
-		<div>{{ message }}</div>
+		<!-- <div>{{ message }}</div> -->
 		<!-- logs -->
 		<div v-if="logstatus == 'pending'">Loading...</div>
 		<LogsDisplay v-if="logs.length > 0" :logs="logs" />
@@ -163,16 +163,31 @@
 </template>
 
 <script setup>
-	const { message, initSSE } = useSSE();
-	let eventSource;
+	// const { message, initSSE } = useSSE();
+	// let eventSource;
+
+	// onMounted(() => {
+	// 	eventSource = initSSE();
+	// });
+
+	// onUnmounted(() => {
+	// 	if (eventSource) {
+	// 		eventSource.close();
+	// 	}
+	// });
+	// const eventSource = new EventSource("/sse");
+
+	// eventSource.onmessage = (event) => {
+	// 	console.log(event.data);
+	// };
 
 	onMounted(() => {
-		eventSource = initSSE();
-	});
+		if (typeof window !== "undefined") {
+			const eventSource = new EventSource("/sse");
 
-	onUnmounted(() => {
-		if (eventSource) {
-			eventSource.close();
+			eventSource.onmessage = (event) => {
+				console.log(event.data);
+			};
 		}
 	});
 

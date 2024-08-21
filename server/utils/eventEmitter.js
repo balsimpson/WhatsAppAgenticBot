@@ -1,4 +1,3 @@
-// server/utils/eventEmitter.js
-import { EventEmitter } from 'events'
+import { EventEmitter } from 'events';
 
-export const serverEvents = new EventEmitter()
+export const eventEmitter = new EventEmitter();

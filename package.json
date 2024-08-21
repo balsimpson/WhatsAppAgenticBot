@@ -15,5 +15,8 @@
     "nuxt": "^3.12.4",
     "openai": "^4.55.9",
     "vue": "latest"
+  },
+  "overrides": {
+    "h3": "npm:h3-nightly@latest"
   }
 }

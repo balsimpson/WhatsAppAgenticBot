@@ -5,10 +5,7 @@ export default defineNuxtConfig({
 		preset: "vercel-edge",
 		storage: {
 			data: { driver: "vercelKV" },
-		},
-		routeRules: {
-			"/api/_nuxt_logs": { ssr: false },
-		},
+		}
 	},
 	devtools: { enabled: true },
 	modules: ["@nuxtjs/tailwindcss"],
