@@ -1,8 +1,6 @@
 <template>
 	<div class="flex flex-col items-center w-full max-w-4xl p-3 mx-auto">
-		<div>{{ messages }}</div>
 		<!-- logs -->
-		<div v-if="logstatus == 'pending'">Loading...</div>
 		<LogsDisplay v-if="logs.length > 0" :logs="logs" />
 
 		<!-- assistants -->
@@ -106,7 +104,7 @@
 		</div>
 
 		<!-- files -->
-		<div v-if="files.length > 0" class="w-full max-w-2xl">
+		<div v-if="files && files.length > 0" class="w-full max-w-2xl">
 			<div
 				v-if="files.length > 0"
 				class="flex justify-between w-full max-w-2xl mt-12 mb-3"
@@ -181,31 +179,38 @@
 	// 	console.log(event.data);
 	// };
 
-	const messages = ref([]);
-	onMounted(() => {
-		if (typeof window !== "undefined") {
-			const eventSource = new EventSource("/sse");
+	// const {
+	// 	assistantstatus,
+	// 	data: assistants,
+	// 	error,
+	// } = await useLazyAsyncData("assistants", () =>
+	// 	$fetch("/api/assistants/list")
+	// );
 
-			eventSource.onmessage = (event) => {
-				console.log(event.data);
-				messages.value.push(event.data);
-			};
+	// const { filestatus, data: files } = await useLazyAsyncData("files", () =>
+	// 	$fetch("/api/files/list")
+	// );
+
+	// const { logstatus, data: logs } = await useLazyAsyncData("logs", () =>
+	// 	$fetch("/api/logs")
+	// );
+
+	const assistants = ref([]);
+	const files = ref([]);
+	const logs = ref([]);
+
+	onMounted(async () => {
+		try {
+			const assistantResponse = await $fetch("/api/assistants/list");
+			assistants.value = assistantResponse;
+
+			const fileResponse = await $fetch("/api/files/list");
+			files.value = fileResponse;
+
+			const logResponse = await $fetch("/api/logs");
+			logs.value = logResponse;
+		} catch (error) {
+			console.error("Failed to fetch data:", error);
 		}
 	});
-
-	const {
-		assistantstatus,
-		data: assistants,
-		error,
-	} = await useLazyAsyncData("assistants", () =>
-		$fetch("/api/assistants/list")
-	);
-
-	const { filestatus, data: files } = await useLazyAsyncData("files", () =>
-		$fetch("/api/files/list")
-	);
-
-	const { logstatus, data: logs } = await useLazyAsyncData("logs", () =>
-		$fetch("/api/logs")
-	);
 </script>

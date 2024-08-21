@@ -75,6 +75,7 @@ export default defineNuxtConfig({
 	runtimeConfig: {
 		public: {
 			OPENAI_KEY: process.env.OPENAI_KEY,
+			KV_URL: process.env.KV_URL,
 		},
 	},
 });
