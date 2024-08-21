@@ -30,38 +30,42 @@
 
 // export default defineEventHandler(async (event) => {
 //   const eventStream = createEventStream(event)
-  
+
 //   const interval = setInterval(async () => {
 //     await eventStream.push(`Message @ ${new Date().toLocaleTimeString()}`)
 //   }, 10000)
-  
+
 //   eventStream.onClosed(async () => {
 //     clearInterval(interval)
 //     await eventStream.close()
 //   })
-  
+
 //   return eventStream.send()
 // })
 
-import { eventEmitter } from '../utils/eventEmitter';
+import { eventEmitter } from "../utils/eventEmitter";
 
 export default defineEventHandler(async (event) => {
-  const eventStream = createEventStream(event);
+	setResponseHeaders(event, {
+		"Content-Type": "text/event-stream",
+		"Cache-Control": "no-cache",
+		Connection: "keep-alive",
+	});
+	const eventStream = createEventStream(event);
 
-  // const interval = setInterval(async () => {
-  //   await eventStream.push(`Message @ ${new Date().toLocaleTimeString()}`);
-  // }, 10000);
+	// const interval = setInterval(async () => {
+	//   await eventStream.push(`Message @ ${new Date().toLocaleTimeString()}`);
+	// }, 10000);
 
-  // Listen for events from eventEmitter and push them to the client
-  eventEmitter.on('newEvent', async (data) => {
-    await eventStream.push(`New Event: ${data}`);
-  });
+	// Listen for events from eventEmitter and push them to the client
+	eventEmitter.on("newEvent", async (data) => {
+		await eventStream.push(`New Event: ${data}`);
+	});
 
-  eventStream.onClosed(async () => {
-    // clearInterval(interval);
-    await eventStream.close();
-  });
+	eventStream.onClosed(async () => {
+		// clearInterval(interval);
+		await eventStream.close();
+	});
 
-  return eventStream.send();
+	return eventStream.send();
 });
-
