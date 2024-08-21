@@ -61,11 +61,13 @@ export default defineEventHandler(async (event) => {
 
 	// Listen for events from eventEmitter and push them to the client
 	eventEmitter.on("newEvent", async (data) => {
+    console.log("eventStream new event");
 		await eventStream.push(`New Event: ${data}`);
 	});
 
 	eventStream.onClosed(async () => {
 		// clearInterval(interval);
+    console.log("eventStream closed");
 		await eventStream.close();
 	});
 
