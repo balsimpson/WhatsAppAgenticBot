@@ -5,7 +5,7 @@ export const useSSE = () => {
   const message = ref('')
 
   const initSSE = () => {
-    const source = new EventSource('/_nuxt_logs')
+    const source = new EventSource('/api/_nuxt_logs')
     source.onmessage = (event) => {
       message.value = JSON.parse(event.data).message
     }
