@@ -4,11 +4,14 @@ import {
 	processWebhookBody,
 } from "~/server/utils/webhookHelpers";
 import { addLogEntry } from "~/server/utils/assistantHelpers";
+import { serverEvents } from '~/server/utils/eventEmitter'
 
 export default defineEventHandler(async (event: any) => {
 	try {
 		const query = getQuery(event);
 
+		serverEvents.emit('newEvent', { message: 'Something happened on the server!' })
+		
 		if (Object.keys(query).length > 0 && isSubscriptionRequest(query)) {
 			return handleSubscription(query);
 		}

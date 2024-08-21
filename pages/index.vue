@@ -1,5 +1,6 @@
 <template>
 	<div class="flex flex-col items-center w-full max-w-4xl p-3 mx-auto">
+		<div>{{ message }}</div>
 		<!-- logs -->
 		<div v-if="logstatus == 'pending'">Loading...</div>
 		<LogsDisplay v-if="logs.length > 0" :logs="logs" />
@@ -162,6 +163,19 @@
 </template>
 
 <script setup>
+	const { message, initSSE } = useSSE();
+	let eventSource;
+
+	onMounted(() => {
+		eventSource = initSSE();
+	});
+
+	onUnmounted(() => {
+		if (eventSource) {
+			eventSource.close();
+		}
+	});
+
 	const {
 		assistantstatus,
 		data: assistants,
