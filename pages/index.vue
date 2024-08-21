@@ -1,17 +1,8 @@
 <template>
 	<div class="flex flex-col items-center w-full max-w-4xl p-3 mx-auto">
 		<!-- logs -->
-
-		<Suspense>
-			<template #default>
-				<LogsDisplay v-if="logs.length > 0" :logs="logs" />
-			</template>
-			<template #fallback>
-				<div>Loading...</div>
-			</template>
-		</Suspense>
-
-		
+		<div v-if="logstatus == 'pending'">Loading...</div>
+		<LogsDisplay v-if="logs.length > 0" :logs="logs" />
 
 		<!-- assistants -->
 		<div v-if="assistants.length > 0" class="w-full max-w-2xl">
@@ -171,13 +162,19 @@
 </template>
 
 <script setup>
-	const { data: assistants, error } = await useAsyncData("assistants", () =>
+	const {
+		assistantstatus,
+		data: assistants,
+		error,
+	} = await useLazyAsyncData("assistants", () =>
 		$fetch("/api/assistants/list")
 	);
 
-	const { data: files } = await useAsyncData("files", () =>
+	const { filestatus, data: files } = await useLazyAsyncData("files", () =>
 		$fetch("/api/files/list")
 	);
 
-	const { data: logs } = await useAsyncData("logs", () => $fetch("/api/logs"));
+	const { logstatus, data: logs } = await useLazyAsyncData("logs", () =>
+		$fetch("/api/logs")
+	);
 </script>
