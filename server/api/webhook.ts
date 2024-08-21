@@ -21,8 +21,8 @@ export default defineEventHandler(async (event: any) => {
 		// console.log("body: ", body);
 
 		// Emit the event when webhook is called
-		eventEmitter.emit('newEvent', body.message || 'Webhook triggered');
-		
+		eventEmitter.emit('newEvent', 'Webhook triggered');
+
 		const res = await processWebhookBody(body);
 
 		// console.log("response: ", res);
