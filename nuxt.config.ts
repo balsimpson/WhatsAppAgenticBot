@@ -6,13 +6,6 @@ export default defineNuxtConfig({
 		storage: {
 			data: { driver: "vercelKV" },
 		},
-		routeRules: {
-			"/api/sse": {
-				headers: {
-					"cache-control": "no-cache",
-				}
-			}
-		}
 
 	},
 	devtools: { enabled: true },

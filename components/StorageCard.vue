@@ -2,7 +2,7 @@
 	<div class="w-full max-w-2xl p-4 bg-white border rounded-lg">
 		<div class="flex justify-between">
 			<div class="w-full">
-				<div class="text-lg font-bold leading-3">
+				<div class="text-lg font-bold leading-5">
 					{{ file.filename }}
 				</div>
 				<div class="pt-1 text-sm text-gray-400">{{ file.id }}</div>

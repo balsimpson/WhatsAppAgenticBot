@@ -4,7 +4,6 @@ import {
 	processWebhookBody,
 } from "~/server/utils/webhookHelpers";
 import { addLogEntry } from "~/server/utils/assistantHelpers";
-import { eventEmitter } from "../utils/eventEmitter";
 
 export default defineEventHandler(async (event: any) => {
 	try {
@@ -19,9 +18,6 @@ export default defineEventHandler(async (event: any) => {
 		// If no query params or not a subscription request, process the message
 		const body = await readBody(event);
 		// console.log("body: ", body);
-
-		// Emit the event when webhook is called
-		eventEmitter.emit("newEvent", "Webhook triggered");
 
 		const res = await processWebhookBody(body);
 

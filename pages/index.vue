@@ -54,8 +54,9 @@
 				<span class="pl-2 pr-1 text-sm">New Assistant</span>
 			</button> -->
 			</div>
-			<div class="w-full max-w-2xl space-y-2 overflow-scroll h-96">
+			<div class="w-full max-w-2xl space-y-2 overflow-scroll h-96 snap-y">
 				<LazyAssistantCard
+				class="snap-start"
 					v-for="assistant in assistants"
 					:key="assistant"
 					:id="assistant.id"
@@ -153,8 +154,8 @@
 					<span class="pl-2 pr-1 text-sm">Upload</span>
 				</button> -->
 			</div>
-			<div class="w-full max-w-2xl space-y-2 overflow-scroll h-96">
-				<LazyStorageCard v-for="file in files" :file="file" />
+			<div class="w-full max-w-2xl space-y-2 overflow-scroll h-96 snap-y snap-mandatory">
+				<LazyStorageCard v-for="file in files" :file="file" class="snap-start snap-always" />
 			</div>
 		</div>
 	</div>
