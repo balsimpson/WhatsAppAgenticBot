@@ -1,5 +1,6 @@
 // server/api/_nuxt_logs.ts
 import { serverEvents } from '../utils/eventEmitter'
+import { createError } from 'h3'
 
 export default defineEventHandler((event) => {
   setResponseHeaders(event, {
@@ -18,13 +19,16 @@ export default defineEventHandler((event) => {
 
   serverEvents.on('newEvent', listener)
 
+  // Send an initial message
+  send({ message: 'SSE connection established' })
+
+  // Clean up on close
   event.node.req.on('close', () => {
     serverEvents.off('newEvent', listener)
   })
 
-  // Send an initial message
-  send({ message: 'SSE connection established' })
-
-  // Keep the connection open
-  return new Promise(() => {})
+  // This keeps the connection open
+  return new Promise<void>(() => {
+    // This promise intentionally never resolves
+  })
 })
