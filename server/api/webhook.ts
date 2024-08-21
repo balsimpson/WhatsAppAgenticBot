@@ -31,8 +31,9 @@ export default defineEventHandler(async (event: any) => {
 		console.error(error);
 		await addLogEntry({
 			type: "error",
-			content: JSON.stringify(error),
+			// @ts-ignore
+			content: `${error.statusCode}: ${error.message}`,
 		});
-		return { error: "An error occurred processing the request" };
+		return { error: "An error occurred processing the request" + JSON.stringify(error) };
 	}
 });

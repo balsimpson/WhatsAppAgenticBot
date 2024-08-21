@@ -16,7 +16,12 @@ export default defineNuxtConfig({
 
 	},
 	devtools: { enabled: true },
-	modules: ["@nuxtjs/tailwindcss"],
+	modules: ["@nuxtjs/tailwindcss", "@nuxt/content"],
+	tailwindcss: {
+		config: {
+		  plugins: [require("@tailwindcss/typography")]
+		}
+	  },
 	app: {
 		head: {
 			title: "WhatsApp Agent | Your Personal AI Assistant",
