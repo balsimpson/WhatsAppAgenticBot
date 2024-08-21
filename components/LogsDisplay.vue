@@ -17,6 +17,7 @@
 			<span class="pl-2 font-semibold">Logs </span>
 		</div>
 
+		<!-- <pre>{{ logs }}</pre> -->
 		<div
 			class="w-full max-w-2xl p-4 mx-auto space-y-2 overflow-y-auto font-mono text-sm text-green-500 bg-black rounded-lg shadow-md max-h-72"
 		>
@@ -25,7 +26,7 @@
 					{{ getRelativeTime(log.timestamp) }}
 				</div>
 
-				<div
+				<!-- <div
 					:class="
 						log.user ? 'bg-black text-green-400' : 'bg-black text-blue-400'
 					"
@@ -55,6 +56,48 @@
 						:class="[
 							isTruncatedList[index] ? 'truncate' : '',
 							log.type === 'requires_action' ? 'text-yellow-500' : '',
+						]"
+					>
+						{{ log.content }}
+					</div>
+				</div> -->
+
+				<div
+					:class="[
+						log.user ? 'bg-black text-green-400' : 'bg-black text-blue-400',
+						log.type === 'error' ? 'text-red-400' : '',
+					]"
+					class="flex flex-col sm:flex-row"
+				>
+					<div
+						:class="[
+							log.user
+								? 'text-green-600'
+								: log.type === 'requires_action'
+								? 'text-yellow-600'
+								: log.type === 'error'
+								? 'text-red-600'
+								: 'text-blue-600',
+						]"
+					>
+						{{
+							log.user
+								? `${log.user}:`
+								: log.type === "requires_action"
+								? "Action:"
+								: log.type === "error"
+								? "Error:"
+								: "Assistant:"
+						}}
+					</div>
+
+					<div
+						@click.prevent="toggleTruncate(index)"
+						class="max-w-full overflow-hidden cursor-pointer sm:pl-3"
+						:class="[
+							isTruncatedList[index] ? 'truncate' : '',
+							log.type === 'requires_action' ? 'text-yellow-500' : '',
+							log.type === 'error' ? 'text-red-500' : '',
 						]"
 					>
 						{{ log.content }}

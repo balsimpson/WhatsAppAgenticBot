@@ -1,8 +1,8 @@
-// server/api/_nuxt_logs.ts
 import { serverEvents } from '../utils/eventEmitter'
-import { createError } from 'h3'
+import { createError, defineEventHandler, setResponseHeaders } from 'h3'
 
 export default defineEventHandler((event) => {
+  // Set response headers
   setResponseHeaders(event, {
     'Content-Type': 'text/event-stream',
     'Cache-Control': 'no-cache',
@@ -19,16 +19,22 @@ export default defineEventHandler((event) => {
 
   serverEvents.on('newEvent', listener)
 
-  // Send an initial message
+  // Send an initial message immediately
   send({ message: 'SSE connection established' })
+
+  // Keep the connection open by periodically sending a comment to prevent Vercel from closing the connection
+  const keepAliveInterval = setInterval(() => {
+    send({ comment: 'ping' })
+  }, 20000) // Send every 20 seconds
 
   // Clean up on close
   event.node.req.on('close', () => {
     serverEvents.off('newEvent', listener)
+    clearInterval(keepAliveInterval)
   })
 
-  // This keeps the connection open
+  // Return a promise that never resolves to keep the connection open
   return new Promise<void>(() => {
-    // This promise intentionally never resolves
+    // Intentionally never resolve
   })
 })
