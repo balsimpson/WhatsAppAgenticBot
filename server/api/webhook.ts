@@ -8,8 +8,6 @@ import { addLogEntry } from "~/server/utils/assistantHelpers";
 export default defineEventHandler(async (event: any) => {
 	try {
 		const query = getQuery(event);
-		// Emit the event when webhook is called
-		eventEmitter.emit("newEvent", "Webhook triggered");
 
 		if (Object.keys(query).length > 0 && isSubscriptionRequest(query)) {
 			return handleSubscription(query);
