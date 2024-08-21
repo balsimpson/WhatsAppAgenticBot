@@ -40,7 +40,7 @@ export const getFile = async (id: string) => {
 	const openai = initializeOpenAI();
 	const file = await openai.files.retrieve(id);
 	return file;
-}
+};
 
 // get list of vector stores
 export const getVectorStores = async () => {
@@ -58,5 +58,55 @@ export const getVectorStore = async (id: string) => {
 	} catch (error) {
 		console.error("Error fetching vector store:", error);
 		return null;
+	}
+};
+
+// add file to vector store
+export const addFileToVectorStore = async (
+	file_id: string,
+	vectore_store_id: string
+) => {
+	try {
+		const openai = initializeOpenAI();
+
+		return await openai.beta.vectorStores.files.create(vectore_store_id, {
+			file_id: file_id,
+		});
+	} catch (error) {
+		console.log("addFileToVectorStore", error);
+		return error;
+	}
+};
+
+// upload file to storage
+export const uploadFile = async (file: any) => {
+	try {
+		const openai = initializeOpenAI();
+
+		// upload file to openai
+		return await openai.files.create({
+			file: file,
+			purpose: "assistants",
+		});
+	} catch (error) {
+		console.log("uploadFile", error);
+		return error;
+	}
+};
+
+// delete file from storage and vector store
+export const deleteFile = async (file_id: string, vectore_store_id: string) => {
+	const openai = initializeOpenAI();
+
+	try {
+		// delete file from vectorstore
+		await openai.beta.vectorStores.files.del(vectore_store_id, file_id);
+		// delete file from storage
+		await openai.files.del(file_id);
+
+		return true;
+	} catch (error) {
+		console.log("deleteFile", error);
+		return error;
 	}
 };

@@ -85,19 +85,24 @@ export async function addLogEntry(entry: any) {
 }
 
 async function handlePendingRuns(threadId: string) {
-	const runs = await openai.beta.threads.runs.list(threadId);
+	try {
+		const runs = await openai.beta.threads.runs.list(threadId);
 
-	if (runs && runs?.data.length > 0) {
-		for (const run of runs.data) {
-			if (run.status != "completed") {
-				let run_id = run.id;
-				let res = await openai.beta.threads.runs.cancel(threadId, run_id);
-				console.log("cancel run", res);
+		if (runs && runs?.data.length > 0) {
+			for (const run of runs.data) {
+				if (run.status != "completed") {
+					let run_id = run.id;
+					let res = await openai.beta.threads.runs.cancel(threadId, run_id);
+					console.log("cancel run", res);
+				}
 			}
 		}
-	}
 
-	return true;
+		return true;
+	} catch (error) {
+		console.error("Error handling pending runs:", error);
+		return false;
+	}
 }
 
 // @ts-ignore
@@ -141,7 +146,7 @@ async function handleRunStatus(
 		});
 		console.log(
 			"Run requires action:",
-			run.required_action?.submit_tool_outputs.tool_calls[0].function
+			run.required_action?.submit_tool_outputs.tool_calls[0].function.name
 		);
 		return await handleRequiresAction(run, thread);
 	} else {
@@ -162,7 +167,8 @@ async function handleRequiresAction(
 ) {
 	if (run.required_action?.submit_tool_outputs?.tool_calls) {
 		const toolOutputs = await handleToolCalls(
-			run.required_action.submit_tool_outputs.tool_calls
+			run.required_action.submit_tool_outputs.tool_calls,
+			run.assistant_id
 		);
 		run = await openai.beta.threads.runs.submitToolOutputs(thread.id, run.id, {
 			tool_outputs: toolOutputs,
