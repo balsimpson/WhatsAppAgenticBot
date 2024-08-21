@@ -9,8 +9,9 @@
 				<div class="flex items-center">
 					<NuxtLink
 						to="/"
-						class="text-2xl font-extrabold tracking-tight text-gray-700 transition duration-200 ease-in-out hover:text-gray-600"
+						class="flex items-center text-2xl font-extrabold tracking-tight text-gray-700 transition duration-200 ease-in-out hover:text-gray-600"
 					>
+					<img src="/favicon.ico" alt="" class="w-8 pr-2 ">
 						WhatsApp<span class="text-purple-700">Agent</span>
 					</NuxtLink>
 				</div>
