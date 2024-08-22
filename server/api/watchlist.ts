@@ -120,7 +120,7 @@ export default defineEventHandler(async (event) => {
 		// Step 5: Upload new file and update storage
 		const result = await uploadFile(newFile);
 		// @ts-ignore
-		await updateStorage(kvstorage, result.id);
+		await updateStorage(kvstorage, result.id, newContent);
 
 		// Step 6: Add new file to the vector store
 		if (vector_store_id) {
@@ -171,8 +171,9 @@ async function getVectorStoreId(assistant_id: string) {
 	return assistant.tool_resources?.file_search?.vector_store_ids[0];
 }
 
-async function updateStorage(kvstorage: any, newFileId: string) {
+async function updateStorage(kvstorage: any, newFileId: string, content: string) {
 	await kvstorage.setItem("file_id", newFileId);
+	await kvstorage.setItem("watchlist", content);
 }
 
 async function logWatchlistUpdate(txt: string) {
