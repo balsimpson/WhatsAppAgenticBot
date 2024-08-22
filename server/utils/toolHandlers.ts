@@ -27,20 +27,17 @@ const toolHandlers: { [key: string]: Function } = {
 			output: "title: The Shawshank Redemption, year: 1994, rating: 9.3",
 		};
 	},
-	update_memory: async (
+	add_to_watchlist: async (
 		tool: any,
 		functionArguments: any,
 		assistant_id: string
 	) => {
-		let result = await $fetch(`/api/memory?txt=${functionArguments.memory}&assistant_id=${assistant_id}`);
+		let result = await $fetch(`/api/watchlist?txt=${functionArguments.name}&assistant_id=${assistant_id}`);
 
 		return {
 			tool_call_id: tool.id,
-			output: "Memory added",
+			output: "Watchlist added",
 		};
 	},
 	// ... other tool handlers
 };
-
-// Implement other helper functions used by tool handlers
-// ...
