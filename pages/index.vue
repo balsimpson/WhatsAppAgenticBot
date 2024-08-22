@@ -204,7 +204,11 @@
 
 	const assistants = useState("assistants", () => []);
 	const files = useState("files", () => []);
-	const logs = useState("logs", () => []);
+	const logs = useState("allLogs", () => []);
+
+	watchEffect(() => {
+		console.log("logs updated", logs.value);
+	})
 
 	onMounted(async () => {
 		try {
