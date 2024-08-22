@@ -198,7 +198,7 @@
 
 	const assistants = ref([]);
 	const files = ref([]);
-	const logs = ref([]);
+	const logs = useState("logs", () => []);
 
 	onMounted(async () => {
 		try {

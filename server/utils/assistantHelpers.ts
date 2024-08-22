@@ -1,6 +1,7 @@
 import OpenAI from "openai";
 import { getAssistant } from "./assistantConfig";
 import { handleToolCalls } from "./toolHandlers";
+import { useState } from "nuxt/app";
 
 const OPENAI_KEY = process.env.OPENAI_KEY;
 
@@ -68,6 +69,10 @@ export async function getAssistantResponse(prompt: any, user: string) {
 
 // Helper function to add a log entry
 export async function addLogEntry(entry: any) {
+
+	// const logsState = useState<string[]>('logs', () => []);
+	const logsState = useState('logs', () => []);
+
 	const storage = useStorage("data");
 	const logs = (await storage.getItem("logs")) || [];
 
@@ -81,6 +86,11 @@ export async function addLogEntry(entry: any) {
 	}
 	// @ts-ignore
 	logs.unshift(entry);
+	
+	// update useState
+	// @ts-ignore
+	logsState.value = logs;
+
 	await storage.setItem("logs", logs);
 }
 

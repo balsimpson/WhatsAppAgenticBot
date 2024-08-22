@@ -5,7 +5,9 @@ import {
 } from "~/server/utils/webhookHelpers";
 import { addLogEntry } from "~/server/utils/assistantHelpers";
 
+
 export default defineEventHandler(async (event: any) => {
+	
 	try {
 		const query = getQuery(event);
 
