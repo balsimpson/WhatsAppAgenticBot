@@ -56,7 +56,7 @@
 			</div>
 			<div class="w-full max-w-2xl space-y-2 overflow-scroll h-96 snap-y">
 				<LazyAssistantCard
-				class="snap-start"
+					class="snap-start"
 					v-for="assistant in assistants"
 					:key="assistant"
 					:id="assistant.id"
@@ -154,8 +154,14 @@
 					<span class="pl-2 pr-1 text-sm">Upload</span>
 				</button> -->
 			</div>
-			<div class="w-full max-w-2xl space-y-2 overflow-scroll h-96 snap-y snap-mandatory">
-				<LazyStorageCard v-for="file in files" :file="file" class="snap-start snap-always" />
+			<div
+				class="w-full max-w-2xl space-y-2 overflow-scroll h-96 snap-y snap-mandatory"
+			>
+				<LazyStorageCard
+					v-for="file in files"
+					:file="file"
+					class="snap-start snap-always"
+				/>
 			</div>
 		</div>
 	</div>
@@ -196,19 +202,28 @@
 	// 	$fetch("/api/logs")
 	// );
 
-	const assistants = ref([]);
-	const files = ref([]);
+	const assistants = useState("assistants", () => []);
+	const files = useState("files", () => []);
 	const logs = useState("logs", () => []);
 
 	onMounted(async () => {
 		try {
-			const assistantResponse = await $fetch("/api/assistants/list");
+			// const assistantResponse = await $fetch("/api/assistants/list");
+			// assistants.value = assistantResponse;
+
+			// const fileResponse = await $fetch("/api/files/list");
+			// files.value = fileResponse;
+
+			// const logResponse = await $fetch("/api/logs");
+			// logs.value = logResponse;
+			const [assistantResponse, fileResponse, logResponse] = await Promise.all([
+				$fetch("/api/assistants/list"),
+				$fetch("/api/files/list"),
+				$fetch("/api/logs"),
+			]);
+
 			assistants.value = assistantResponse;
-
-			const fileResponse = await $fetch("/api/files/list");
 			files.value = fileResponse;
-
-			const logResponse = await $fetch("/api/logs");
 			logs.value = logResponse;
 		} catch (error) {
 			console.error("Failed to fetch data:", error);
