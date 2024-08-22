@@ -30,7 +30,7 @@ export const formatBytes = (bytes: any) => {
 
 export const getRelativeTime = (timestamp: string | number | Date) => {
 	const date = new Date(timestamp);
-	
+
 	const formatter = new Intl.RelativeTimeFormat("en-US", { numeric: "auto" });
 	const diff = Date.now() - date.getTime();
 
@@ -92,3 +92,28 @@ export function useTimeAgo(timestamp: any) {
 
 	return { timeAgo };
 }
+
+let intervalId: any = null;
+export const handlePolling = (isPolling: boolean) => {
+
+	const fetchLogs = async () => {
+		const data = await $fetch("/api/logs");
+		const logs = useState("allLogs");
+		logs.value = data || [];
+	};
+
+	const startPolling = () => {
+		intervalId = setInterval(fetchLogs, 3000);
+	};
+
+	const stopPolling = () => {
+		clearInterval(intervalId);
+	};
+
+	if (isPolling) {
+		fetchLogs(); // Fetch logs immediately
+		startPolling();
+	} else {
+		stopPolling();
+	}
+};

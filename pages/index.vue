@@ -4,7 +4,7 @@
 		<!-- <div v-if="state.loading.logs">Loading logs...</div> -->
 		<div v-if="state.error.logs">{{ state.error.logs }}</div>
 		<div v-else class="w-full max-w-2xl mt-12 mb-3">
-			<LogsDisplay :logs="state.data.logs" />
+			<LogsDisplay @toggle-polling="handlePolling($event)" :logs="state.data.logs" />
 		</div>
 
 		<!-- assistants -->
@@ -100,25 +100,6 @@
 </template>
 
 <script setup>
-	// const assistants = useState("assistants", () => []);
-	// const files = useState("files", () => []);
-	// const logs = useState("allLogs", () => []);
-
-	// onMounted(async () => {
-	// 	try {
-	// 		const [assistantResponse, fileResponse, logResponse] = await Promise.all([
-	// 			$fetch("/api/assistants/list"),
-	// 			$fetch("/api/files/list"),
-	// 			$fetch("/api/logs"),
-	// 		]);
-
-	// 		assistants.value = assistantResponse;
-	// 		files.value = fileResponse;
-	// 		logs.value = logResponse;
-	// 	} catch (error) {
-	// 		console.error("Failed to fetch data:", error);
-	// 	}
-	// });
 
 	const state = reactive({
 		loading: {
