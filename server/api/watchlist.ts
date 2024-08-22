@@ -100,7 +100,7 @@ export default defineEventHandler(async (event) => {
 
 		// Step 2: Append new text to the content
 		const newContent = `${fileContent}\n${txt}`;
-		console.log("Watchlist content:", newContent);
+		console.log("Watchlist content:", fileContent, newContent, txt);
 		
 		const createdFile = await createTextFile(newContent, FILE_NAME);
 
