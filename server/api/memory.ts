@@ -46,7 +46,7 @@ export default defineEventHandler(async (event) => {
 		// if file_id delete old file from storage and vector store
 		if (file_id && vector_store_id) {
 			// @ts-ignore
-			await deleteFile(file_id, assistant_id);
+			await deleteFile(file_id, vector_store_id);
 		}
 
 		// upload new file to storage
