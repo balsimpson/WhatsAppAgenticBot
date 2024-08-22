@@ -95,12 +95,13 @@ export default defineEventHandler(async (event) => {
 			kvstorage.getItem("watchlist") || "",
 			kvstorage.getItem("file_id"),
 		]);
-		console.log("fileContent:", fileContent);
 		console.log("file_id:", file_id);
+		console.log("fileContent:", fileContent);
+		console.log("txt:", txt);
 
 		// Step 2: Append new text to the content
 		const newContent = `${fileContent}\n${txt}`;
-		console.log("Watchlist content:", fileContent, newContent, txt);
+		console.log("Watchlist content:", newContent);
 		
 		const createdFile = await createTextFile(newContent, FILE_NAME);
 
