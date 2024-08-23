@@ -5,9 +5,11 @@ export default defineEventHandler(async (event) => {
 		const assistants = await getAssistantsList();
 		return assistants;
 	} catch (error) {
-		console.log("Assistants list error: ", error);
-		return {
-			message: "Assistants-Error: " + error,
-		};
+		// @ts-ignore
+		console.log("Assistants list error: ", error.message);
+		throw createError({
+			// @ts-ignore
+			statusMessage: error.message,
+		});
 	}
 });

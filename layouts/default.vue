@@ -11,60 +11,31 @@
 						to="/"
 						class="flex items-center text-2xl font-extrabold tracking-tight text-gray-700 transition duration-200 ease-in-out hover:text-gray-600"
 					>
-					<img src="/favicon.ico" alt="" class="w-8 pr-2 ">
+						<img src="/favicon.ico" alt="" class="w-8 pr-2" />
 						WhatsApp<span class="text-purple-700">Agent</span>
 					</NuxtLink>
 				</div>
 				<nav
-					class="flex items-center p-2 mt-2 bg-gray-100 rounded-lg shadow-md md:mt-0 gap-x-4"
+					class="flex items-center mt-2 md:mt-0"
 				>
-					<!-- OpenAI API Status -->
-					<div class="flex items-center">
-						<div class="flex items-center group">
-							<span
-								:class="`py-1 ml-2 text-xs font-medium ${
-									config.public.OPENAI_KEY ? 'text-gray-700' : 'text-red-600'
-								}`"
-							>
-								{{
-									config.public.OPENAI_KEY
-										? "OpenAI API Connected"
-										: "OpenAI API Not Connected"
-								}}
-							</span>
-							<div
-								:class="`w-6 h-6 ml-2 rounded-full ${
-									config.public.OPENAI_KEY
-										? 'bg-green-500 group-hover:bg-green-600'
-										: 'bg-red-500 group-hover:bg-red-600'
-								}`"
-							></div>
-						</div>
-					</div>
+					<div class="flex items-center p-2 bg-gray-100 rounded-full shadow-md gap-x-4">
+						<!-- OpenAI API Status -->
+						<APIStatusDisplay
+							title="OpenAI API"
+							:status="config.public.OPENAI_KEY ? true : false"
+						/>
 
-					<!-- KV Store Status -->
-					<div class="flex items-center">
-						<div class="flex items-center group">
-							<span
-								:class="` py-1 ml-2 text-xs font-medium ${
-									config.public.KV_URL ? 'text-gray-700' : 'text-red-600'
-								}`"
-							>
-								{{
-									config.public.KV_URL
-										? "KV Store Connected"
-										: "KV Store Not Connected"
-								}}
-							</span>
-							<div
-								:class="`w-6 h-6 ml-2 rounded-full ${
-									config.public.KV_URL
-										? 'bg-green-500 group-hover:bg-green-600'
-										: 'bg-red-500 group-hover:bg-red-600'
-								}`"
-							></div>
-						</div>
+						<!-- KV Store Status -->
+						<APIStatusDisplay
+							title="KV Store"
+							:status="config.public.KV_URL ? true : false"
+						/>
 					</div>
+					<NuxtLink to="/help" class="flex items-center pl-6 font-semibold text-gray-700 hover:text-gray-900">
+
+						<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M12 4a8 8 0 1 0 0 16 8 8 0 0 0 0-16ZM2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10S2 17.523 2 12Z" clip-rule="evenodd"></path><path fill-rule="evenodd" d="M12 9a1 1 0 0 0-.879.522 1 1 0 0 1-1.754-.96A3 3 0 0 1 12 7c1.515 0 2.567 1.006 2.866 2.189.302 1.189-.156 2.574-1.524 3.258A.618.618 0 0 0 13 13a1 1 0 1 1-2 0c0-.992.56-1.898 1.447-2.342.455-.227.572-.618.48-.978C12.836 9.314 12.529 9 12 9Z" clip-rule="evenodd"></path><path d="M13.1 16a1.1 1.1 0 1 1-2.2 0 1.1 1.1 0 0 1 2.2 0Z"></path></svg>
+						<span class="pl-1">Help</span>
+					</NuxtLink>
 				</nav>
 			</div>
 		</header>

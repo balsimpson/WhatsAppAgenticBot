@@ -8,9 +8,11 @@ export default defineEventHandler(async (event) => {
 		const files = await getStorageList();
 		return files;
 	} catch (error) {
-		console.log("Get Files", error);
-		return {
-			message: "Get files: Error" + error,
-		};
+		// @ts-ignore
+		console.error("Get Files", error.message);
+		throw createError({
+			// @ts-ignore
+			statusMessage: error.message,
+		});
 	}
 });

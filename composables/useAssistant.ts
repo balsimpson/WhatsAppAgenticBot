@@ -16,8 +16,12 @@ export const getAssistantsList = async () => {
 		const assistants = await openai.beta.assistants.list();
 		return assistants.data || [];
 	} catch (error) {
-		console.error("Error fetching assistants:", error);
-		return [];
+		console.error("Fetching assistants:", error);
+		throw createError({
+			// statusCode: 401,
+			// @ts-ignore
+			statusMessage: error.message,
+		});
 	}
 };
 

@@ -10,6 +10,10 @@ const openai = new OpenAI({
 	apiKey: OPENAI_KEY,
 });
 
+// Define the maximum time for a thread to be active
+// 15 minutes - 15 x (60secs | 60,000 millisecs)
+const THREAD_MAX_TIME = 15 * 60 * 1000;
+
 export async function getAssistantResponse(prompt: any, user: string) {
 	console.log(`${user}: `, prompt);
 	const storage = useStorage("data");
@@ -46,7 +50,7 @@ export async function getAssistantResponse(prompt: any, user: string) {
 			const lastUpdateTimestamp = new Date(thread_data.created_at);
 
 			//@ts-ignore
-			if (Date.now() - lastUpdateTimestamp.getTime() * 1000 > 15 * 60 * 1000) {
+			if (Date.now() - lastUpdateTimestamp.getTime() * 1000 > THREAD_MAX_TIME) {
 				// If it was, create a new thread
 				const newThread = await openai.beta.threads.create();
 				thread_id = newThread.id;
