@@ -172,7 +172,7 @@ async function handleRunStatus(
 			content: "Run did not complete:" + JSON.stringify(run),
 		});
 
-		return "Oops! I got no reply.";
+		return "Oops! I got no reply - " + run.status;
 	}
 }
 
